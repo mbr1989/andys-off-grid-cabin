@@ -6,7 +6,7 @@ An automated, ESP32-monitored off-grid power management and telemetry system for
 
 ## 📌 Overview
 
-This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-200A active balance BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, and a **Victron Phoenix 24/800 Inverter**, managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-200A active balance BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, and a dedicated **Victron Phoenix 24/800 Inverter** (reserved exclusively for refrigerator operation), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
 
 Modbus RTU communication with the charge controller and BMS is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
 
@@ -26,9 +26,10 @@ The system enables real-time telemetry, automated low-temperature charge managem
   * **Auto Direction Control:** No `DE/RE` pin toggling required in firmware
   * **Level Shifting:** 3.3V / 5V TTL logic compatible
   * **Protection:** Integrated TVS surge protection diodes
-* **Inverter:** Victron Phoenix 24/800 VE.Direct
+* **Dedicated Inverter (Refrigerator Load):** Victron Phoenix 24/800 VE.Direct
+  * **Application:** Dedicated 230 VAC power supply exclusively for the cabin refrigerator
   * **Continuous Power:** 650 W / 800 VA @ 230 VAC (Pure Sine Wave)
-  * **Peak Surge Power:** 1500 W
+  * **Peak Surge Power:** 1500 W (handles compressor start-up surges)
   * **DC Input Voltage:** 24 VDC nominal (18.4 V – 34.0 VDC operating range)
   * **Communication & Control:** VE.Direct (UART Serial interface for ESP32 telemetry) / Remote Switch Port
 * **Solar Controller:** EPEVER Tracer 5420AN
@@ -52,6 +53,7 @@ The system enables real-time telemetry, automated low-temperature charge managem
 ## ⚡ Key Features
 
 * **Real-time Telemetry & LoRa Transmission:** Reads cell voltages, active balancing current, State of Charge (SoC), pack voltage, temperatures, and solar parameters, broadcasting them via LoRa for long-range off-grid monitoring.
+* **Dedicated Load Optimization:** Controls and monitors the Victron inverter running the refrigerator to maximize battery efficiency (e.g., via ECO mode or automated power scheduling).
 * **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for reliable Modbus RTU polling without hardware direction control pins.
 * **EPEVER & Victron Integration:** Connects via Modbus RTU (RS485) and VE.Direct (UART) to retrieve solar yield and inverter state.
 * **Automated Low-Temperature Heating:**
