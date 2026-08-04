@@ -77,8 +77,6 @@ The system enables real-time telemetry, automated low-temperature charge managem
 
 ```text
 .
-├── src/                # ESP32 C++ / Arduino firmware source files
-├── lib/                # Custom drivers (RS485 Modbus, VE.Direct, JK-BMS)
+├── packages/           # Custom drivers (RS485 Modbus, VE.Direct, JK-BMS)
 ├── docs/               # System schematics, pinout diagrams, and documentation
-├── platformio.ini      # PlatformIO environment configuration
 └── README.md           # Project documentation
