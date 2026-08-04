@@ -6,7 +6,7 @@ An automated, ESP32-monitored off-grid power management and telemetry system for
 
 ## 📌 Overview
 
-This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, a **Victron Phoenix 24/800 Inverter** (dedicated exclusively to refrigerator operation), and an **EPEVER iPower-Plus Inverter** (supplying the main cabin AC network and workshop equipment), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, a **Victron Phoenix 24/800 Inverter** (dedicated exclusively to refrigerator operation), and an **EPEVER iPower-Plus 2000W Inverter** (supplying the main cabin AC network and high-load workshop equipment), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
 
 Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
 
@@ -32,8 +32,9 @@ The system enables real-time telemetry, automated low-temperature charge managem
   * **Peak Surge Power:** 1500 W (handles compressor start-up surges)
   * **DC Input Voltage:** 24 VDC nominal (18.4 V – 34.0 VDC operating range)
   * **Communication & Control:** VE.Direct (UART Serial interface for ESP32 telemetry) / Remote Switch Port
-* **Main Cabin & Workshop Inverter:** EPEVER iPower-Plus (IP-Plus) Series
-  * **Application:** High-power 230 VAC pure sine wave supply for general cabin power, lighting, power tools, and workshop machinery
+* **Main Cabin & Workshop Inverter:** EPEVER iPower-Plus IP2000 (2000W Continuous Output)
+  * **Application:** High-power 2000 W (4000 W Peak) 230 VAC pure sine wave supply for general cabin power, lighting, power tools, and heavy workshop machinery
+  * **Continuous / Surge Power:** 2000 W Continuous / 4000 W Peak Surge
   * **DC Input Voltage:** 24 VDC nominal
   * **Communication & Control:** RS485 (Modbus RTU) / Remote Switch Port for automated load shedding
 * **Solar Controller:** EPEVER Tracer 5420AN
@@ -47,7 +48,6 @@ The system enables real-time telemetry, automated low-temperature charge managem
   * **Continuous / Peak Current:** 200 A Continuous / 350 A Peak
   * **Active Balancer:** 2.0 A active balancing current
   * **Features (CEHMPRT Option):** CAN Bus, RS485 (Modbus), Dedicated Heating Pad Interface (`H`), Multi-Parallel support, Power Switch Port, Dry Contact Relay, NTC Temp Sensors
-  * **BLE MAC Address:** `A4:C1:38:09:08:EF`
 * **Safety & Thermal Management:**
   * Inline main battery fuse
   * Integrated BMS heating pad output control combined with physical bimetal hardware temperature cut-off switches mounted directly on heating pads
@@ -58,10 +58,10 @@ The system enables real-time telemetry, automated low-temperature charge managem
 ## ⚡ Key Features
 
 * **Real-time Telemetry & LoRa Transmission:** Reads cell voltages, active balancing current, State of Charge (SoC), pack voltage, temperatures, and solar parameters, broadcasting them via LoRa for long-range off-grid monitoring.
-* **Dual Inverter Architecture (Isolated Base Load & Heavy AC Loads):**
-  * Keeps the highly efficient Victron Phoenix running continuously for the refrigerator.
-  * Controls the EPEVER iPower-Plus for high-power cabin/workshop demands (tools, machinery, lighting), allowing complete remote power-down to eliminate standby current when unused.
-* **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for multi-device Modbus RTU polling (Tracer MPPT, EPEVER IP-Plus, JK-BMS) without hardware direction control pins.
+* **Dual Inverter Architecture (Isolated Base Load & High-Power AC):**
+  * Keeps the highly efficient Victron Phoenix running continuously for the refrigerator base load.
+  * Controls the **2000W EPEVER iPower-Plus** for heavy cabin/workshop demands (power tools, machinery, heavy appliances) with up to 4000W surge capacity, allowing remote automated power-down when not in use.
+* **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for multi-device Modbus RTU polling (Tracer MPPT, EPEVER IP2000, JK-BMS) without hardware direction control pins.
 * **Multi-Protocol Telemetry:** Integrates Modbus RTU (RS485), VE.Direct (UART), and optional BLE polling for JK-BMS data retrieval.
 * **Automated Low-Temperature Heating:**
   * Automatically engages internal heating pads when ambient/cell temperatures drop toward freezing (< 0°C / 32°F).
