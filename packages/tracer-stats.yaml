@@ -1,0 +1,194 @@
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_max_pv_voltage_today
+    name: "MPPT Maximum PV voltage today"
+    address: 0x3300
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    unit_of_measurement: "V"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_min_pv_voltage_today
+    name: "MPPT Minimum PV voltage today"
+    address: 0x3301
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    unit_of_measurement: "V"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_max_battery_voltage_today
+    name: "MPPT Maximum battery voltage today"
+    address: 0x3302
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    unit_of_measurement: "V"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_min_battery_today
+    name: "MPPT Minimum battery voltage today"
+    address: 0x3303
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    unit_of_measurement: "V"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_consumed_energy_today
+    name: "MPPT Consumed energy today"
+    address: 0x3304
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 0
+    unit_of_measurement: "Wh"
+    device_class: "energy"
+    filters:
+      - multiply: 10.0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_consumed_energy_month
+    name: "MPPT Consumed Energy Month"
+    address: 0x3306
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 0
+    unit_of_measurement: "Wh"
+    device_class: "energy"
+    filters:
+      - multiply: 10.0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_consumed_energy_year
+    name: "MPPT Consumed energy year"
+    address: 0x3308
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_consumed_energy_total
+    name: "MPPT Consumed energy total"
+    address: 0x330A
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_generated_energy_today
+    name: "MPPT Generated energy today"
+    address: 0x330C
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 0
+    unit_of_measurement: "Wh"
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: mppt_generated_charge_today
+            state: !lambda "return id(mppt_battery_voltage).state > 0 ? (x / id(mppt_battery_voltage).state) : (x / 24.0);"
+    device_class: "energy"
+    filters:
+      - multiply: 10.0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_generated_energy_month
+    name: "MPPT Generated energy month"
+    address: 0x330E
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 0
+    unit_of_measurement: "Wh"
+    device_class: "energy"
+    filters:
+      - multiply: 10.0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_generated_energy_year
+    name: "MPPT Generated energy year"
+    address: 0x3310
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_generated_energy_total
+    name: "MPPT Generated energy total"
+    address: 0x3312
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_co2_reduction
+    name: "MPPT CO2 reduction"
+    address: 0x3314
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    unit_of_measurement: "kg"
+    filters:
+      - multiply: 10.0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_voltage
+    name: "MPPT Battery voltage"
+    address: 0x331A
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    unit_of_measurement: "V"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_current
+    name: "MPPT Battery current"
+    address: 0x331B
+    register_type: read
+    value_type: S_DWORD_R
+    register_count: 2
+    accuracy_decimals: 2
+    unit_of_measurement: "A"
+    filters:
+      - multiply: 0.01

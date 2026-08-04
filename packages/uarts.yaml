@@ -1,0 +1,25 @@
+# ----------------------------------------------------------------------
+# Hardware Busses: UARTs (RS485 + VE.Direct)
+# ----------------------------------------------------------------------
+uart:
+# UART0: JK-BMS (Modbus RS485 #1)
+  - id: uart_jkbms
+    tx_pin: GPIO43
+    rx_pin: GPIO44
+    baud_rate: 115200
+# UART1: EPEVER (Modbus RS485 #2)
+  - id: uart_epever
+    tx_pin: GPIO39
+    rx_pin: GPIO40
+    baud_rate: 115200
+# UART2: Victron VE.Direct
+  - id: uart_victron
+    tx_pin: GPIO41
+    rx_pin: GPIO42
+    baud_rate: 19200
+# ----------------------------------------------------------------------
+# Victron VE.Direct Configuration
+# ----------------------------------------------------------------------
+victron:
+  id: victron_phoenix
+  uart_id: uart_victron

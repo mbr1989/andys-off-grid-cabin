@@ -1,0 +1,5 @@
+wifi:
+  ap:
+    ssid: Andy's Off-Grid Cabin
+    password: !secret andys_off_grid_cabin__ap_password
+captive_portal:

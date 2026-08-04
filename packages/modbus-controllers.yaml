@@ -1,0 +1,35 @@
+# ----------------------------------------------------------------------
+# Modbus Controller JK-BMS & Epever
+# ----------------------------------------------------------------------
+modbus_controller:
+  # Epever Modbus Controller
+  - id: modbus_ctl_epever_tracer
+    ## the Modbus device addr
+    address: 0x1
+    modbus_id: modbus_comp_epever
+    command_throttle: 200ms
+    setup_priority: -10
+    update_interval: 5s
+
+  - id: modbus_ctl_epever_ip_plus
+    ## the Modbus device addr
+    address: 0x3
+    modbus_id: modbus_comp_epever
+    command_throttle: 200ms
+    setup_priority: -10
+    update_interval: 5s
+
+  # JK-BMS Modbus Controller 
+  - id: modbus_ctl_jkbms
+    # Dip switch configuration of a single pack setup / address 0x01
+    #  1    2    4    5
+    #  on, off, off, off (0x01)
+    #
+    # Don't turn off all dip switches / don't use device address 0x00.
+    # This is the Modbus Master mode. You must select a device address
+    # between 0x01 and 0x0f so the BMS acts as Modbus Slave.
+    address: 0x01
+    modbus_id: modbus_comp_jkbms
+    command_throttle: 200ms
+    setup_priority: -10
+    update_interval: 5s

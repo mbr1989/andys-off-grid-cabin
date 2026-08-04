@@ -1,0 +1,9 @@
+# ----------------------------------------------------------------------
+# Modbus Component JK-BMS & Epever
+# ----------------------------------------------------------------------
+modbus:
+  - id: modbus_comp_epever
+    uart_id: uart_epever
+    role: client
+  - id: modbus_comp_jkbms
+    uart_id: uart_jkbms

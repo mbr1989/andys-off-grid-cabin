@@ -1,0 +1,21 @@
+sensor:
+# --- LoRaWAN Payload Bindings (Reihenfolge bestimmt Byte-Position) ---
+  # 1. Yield Today
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: mppt_generated_charge_today
+  # 2. Solar Power
+  # ID aus package/tracer-real-time.yaml
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: mppt_charging_power   
+  # 3. Battery SOC
+  # ID aus package/jk-bms-sensors.yaml
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: jkbms_battery_soc           
+  # 4.Einbrucherkennung
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: intrusion_detection_numeric
+    

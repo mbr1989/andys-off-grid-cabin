@@ -1,1 +1,61 @@
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 10
+  - file: "gfonts://Roboto"
+    id: font_large
+    size: 16
+    
+i2c:
+  - id: i2c_1
+    scl: GPIO17
+    sda: GPIO18
+    
+display:
+  - platform: ssd1306_i2c
+    id: display_ssd1306_i2c_1
+    i2c_id: i2c_1
+    model: SSD1306_128X64
+    update_interval: 1s
+    pages:
+       - id: fridge
+         lambda: |-
+           // 1. Überschrift / Modus
+           it.printf(0, 0, id(font_small), "KÜHLSCHRANK / SOC");
+           it.line(0, 12, 127, 12); // Trennlinie
 
+           // 2. Aktuellen SOC-Wert als Text anzeigen
+           if (id(jkbms_battery_soc).has_state())
+           {
+               it.printf(0, 18, id(font_large),"SOC: %.0f%%", id(jkbms_battery_soc).state);
+           }
+           else
+           {
+               it.printf(0, 18, id(font_large), "SOC: --");
+           }
+
+           // ------------------------------------------------------------------
+           // 3. SCHIEBEREGLER / FORTSCHRITTSBALKEN (Slider Frame & Fill)
+           // ------------------------------------------------------------------
+           int bar_x = 10;      // Start X-Position
+           int bar_y = 42;      // Start Y-Position
+           int bar_width = 108; // Gesamtbreite des Schiebereglers
+           int bar_height = 14; // Höhe des Balkens
+
+           // Äußerer Rahmen des Schiebereglers
+           it.rectangle(bar_x, bar_y, bar_width, bar_height);
+
+           // Innere Füllung berechnen (0 - 100%)
+           if (id(jkbms_battery_soc).has_state())
+           {
+              float soc = id(jkbms_battery_soc).state;
+              if (soc < 0.0) soc = 0.0;
+              if (soc > 100.0) soc = 100.0;
+
+           // Berechne die Pixelbreite des inneren Balkens (abzüglich 2px Rand)
+           int fill_width = (int)((bar_width - 4) * (soc / 100.0));         
+           if (fill_width > 0)
+             {
+               it.filled_rectangle(bar_x + 2, bar_y + 2, fill_width, bar_height - 4);
+             }
+           }

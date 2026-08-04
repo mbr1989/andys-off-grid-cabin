@@ -1,0 +1,19 @@
+# ----------------------------------------------------------------------
+# LoRaWAN Configuration (SX1262 Chip on LilyGO T3-S3)
+# ----------------------------------------------------------------------
+lorawan:
+  id: my_lorawan
+  region: EU868
+  uplink_interval: 15min
+  radio:
+   chip: sx1262
+   cs_pin: GPIO7
+   rst_pin: GPIO8
+   dio0_pin: GPIO33
+   sck_pin: GPIO5
+   miso_pin: GPIO3
+   mosi_pin: GPIO6
+  # Bitte mit deinen TTN-Credentials ersetzen (HEX Format):
+  dev_eui: "0000000000000000"
+  join_eui: "0000000000000000"
+  app_key: "00000000000000000000000000000000"

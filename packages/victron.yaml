@@ -1,0 +1,50 @@
+# --- Victron Phoenix 24/800 ---
+sensor:
+  - platform: victron
+    victron_id: victron_phoenix
+    battery_voltage:
+      name: "Victron Phoenix Battery Voltage"
+    battery_current:
+      name: "Victron Phoenix Battery Current"
+    charging_mode_id:
+      name: "Victron Phoenix Charging Node ID"
+    device_mode_id:
+      name: "Victron Phoenix Device Mode ID"
+    ac_out_voltage:
+      name: "Victron Phoenix AC OUT Voltage"
+    ac_out_current:
+      name: "Victron Phoenix AC OUT Current"
+    ac_out_apparent_power:
+      name: "Victron Phoenix AC OUT Apparent Power"
+    warning_code:
+      name: "Victron Phoenix Warning Code"
+    off_reason_bitmask:
+      name: "Victron Phoenix OFF Reason Bitmask"
+      
+text_sensor:
+  - platform: victron
+    victron_id: victron_phoenix
+    alarm_reason:
+      name: "Victron Phoenix Alarm Reason"
+    # TODO: "OR"
+    charging_mode:
+      name: "Victron Phoenix Charging Mode"
+    firmware_version:
+      name: "Victron Phoenix Firmware Version"
+    device_type:
+      name: "Victron Phoenix Device Type"
+    serial_number:
+      name: "Victron Phoenix Serial Number"
+    device_mode:
+      name: "Victron Phoenix Device Mode"
+    warning:
+      name: "Victron Phoenix Warning"
+    off_reason:
+      name: "Victron Phoenix OFF Reason"
+      
+binary_sensor:
+  - platform: victron
+    victron_id: victron_phoenix
+    relay_state:
+      name: "Victron Phoenix Relay State"
+ 

@@ -1,0 +1,148 @@
+sensor:
+  # --- DC-Eingang (Batterieseite) ---
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_load_input_voltage
+    name: "IP Plus Input Voltage"
+    address: 0x3108
+    skip_updates: 60
+    unit_of_measurement: "V"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_load_input_current
+    name: "IP Plus Input Current"
+    address: 0x3109
+    skip_updates: 60
+    unit_of_measurement: "A"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # DC Input Power (32-Bit: Low-Word 0x310A + High-Word 0x310B)
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_load_input_power
+    name: "IP Plus Input Power"
+    address: 0x310A
+    register_count: 2
+    register_type: read
+    value_type: U_DWORD
+    skip_updates: 60
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # --- AC-Ausgang (230V-Seite) ---
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_output_voltage
+    name: "IP Plus AC Output Voltage"
+    address: 0x310C
+    skip_updates: 60
+    unit_of_measurement: "V"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_output_current
+    name: "IP Plus AC Output Current"
+    address: 0x310D
+    skip_updates: 60
+    unit_of_measurement: "A"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # AC Output Power (32-Bit: Low-Word 0x310E + High-Word 0x310F)
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_output_power
+    name: "IP Plus AC Output Power"
+    address: 0x310E
+    register_count: 2
+    register_type: read
+    value_type: U_DWORD
+    skip_updates: 60
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # --- Temperaturen & Status ---
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_device_temp
+    name: "IP Plus Device Temperature"
+    address: 0x3111
+    skip_updates: 60
+    unit_of_measurement: "°C"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_heatsink_temp
+    name: "IP Plus Heatsink Temperature"
+    address: 0x3112
+    skip_updates: 60
+    unit_of_measurement: "°C"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_status_bitmask
+    name: "IP Plus Load Status Bitmask"
+    address: 0x3202
+    skip_updates: 60
+    register_type: read
+    value_type: U_WORD
+
+# --- Remote Steuerung & Schalter (Coils) ---
+switch:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    name: "IP Plus Remote Control Mode"
+    id: ip_plus_remote_mode
+    address: 0x11
+    register_type: coil
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    name: "IP Plus Output Enable"
+    id: ip_plus_output_enable
+    address: 0x0F
+    register_type: coil
+
+button:
+  - platform: template
+    id: ip_plus_clear_faults
+    name: "IP Plus Clear Faults"
+    icon: "mdi:alert-remove"
+    on_press:
+      - lambda: |-
+          auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_coil_command(
+              id(modbus_ctl_epever_ip_plus), 0x0013, true
+          );
+          id(modbus_ctl_epever_ip_plus)->queue_command(cmd);

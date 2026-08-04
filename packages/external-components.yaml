@@ -1,0 +1,8 @@
+# ----------------------------------------------------------------------
+# External Components (JK-BMS, Victron & LoRaWAN SX1262)
+# ----------------------------------------------------------------------
+external_components:
+  - source: github://syssi/esphome-jk-bms@main
+  - source: github://moellere/lorawan-for-esphome@main
+    components: [lorawan]
+  - source: github://syssi/esphome-victron-vedirect@main

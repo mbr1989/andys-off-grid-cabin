@@ -1,0 +1,211 @@
+sensor:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_pv_input_voltage
+    name: "MPPT PV array input voltage"
+    address: 0x3100
+    unit_of_measurement: "V" ## for any other unit the value is returned in minutes
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_pv_input_current
+    name: "MPPT PV array input current"
+    address: 0x3101
+    unit_of_measurement: "A" ## for any other unit the value is returned in minutes
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_pv_input_power
+    name: "MPPT PV array input power"
+    address: 0x3102
+    unit_of_measurement: "W" ## for any other unit the value is returned in minutes
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    device_class: "power"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_charging_voltage
+    name: "MPPT Charging voltage"
+    address: 0x3104
+    unit_of_measurement: "V"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_charging_current
+    name: "MPPT Charging current"
+    address: 0x3105
+    unit_of_measurement: "A"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_charging_power
+    name: "MPPT Charging power"
+    address: 0x3106
+    unit_of_measurement: "W"
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    device_class: "power"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_load_voltage
+    name: "MPPT Load voltage"
+    address: 0x310C
+    unit_of_measurement: "V"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_load_current
+    name: "MPPT Load Current"
+    address: 0x310D
+    unit_of_measurement: "A"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_load_power
+    name: "Load power"
+    address: 0x310E
+    unit_of_measurement: "W"
+    register_type: read
+    value_type: U_DWORD_R
+    accuracy_decimals: 1
+    device_class: "power"
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_temperature
+    name: "MPPT Battery temperature"
+    address: 0x3110
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_device_temperature
+    name: "MPPT Device temperature"
+    address: 0x3111
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_power_components_temperature
+    name: "MPPT Power components temperature"
+    address: 0x3112
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_soc
+    name: "MPPT Battery SOC"
+    address: 0x311A
+    unit_of_measurement: "%"
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_remote_battery_temperature
+    name: "MPPT Remote battery temperature"
+    address: 0x311B
+    unit_of_measurement: °C
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_volt_settings
+    name: "MPPT Remote real voltage"
+    address: 0x311D
+    unit_of_measurement: "V"
+    register_type: read
+    value_type: S_WORD
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_status_volt
+    name: "MPPT Battery status voltage"
+    address: 0x3200
+    register_type: read
+    value_type: U_WORD
+    bitmask: 0x0F  # Deckt Bits D0 bis D3 komplett ab
+    accuracy_decimals: 0
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_battery_status_temp
+    name: "MPPT Battery status temperature"
+    address: 12800
+    register_type: read
+    value_type: U_WORD
+    bitmask: 240
+    accuracy_decimals: 0
+    filters:
+      - lambda: return ((int)x) >> 4;
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_charger_status
+    name: "MPPT Charger status"
+    address: 0x3201
+    register_type: read
+    value_type: U_WORD
+    accuracy_decimals: 0
