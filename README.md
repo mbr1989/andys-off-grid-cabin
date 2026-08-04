@@ -1,16 +1,16 @@
-# ⚡ Andy's Off-Grid Cabin Power System
+# ⚡ Andy's Off-Grid Cabin Power System (ESPHome)
 
-An automated, ESP32-monitored off-grid power management and telemetry system for cabin energy storage, solar charge regulation, dual-inverter management, and winter protection.
+An automated, ESPHome-based off-grid power management and telemetry system for cabin energy storage, solar charge regulation, dual-inverter management, and winter protection.
 
 ---
 
 ## 📌 Overview
 
-This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, a **Victron Phoenix 24/800 Inverter** (thermostatically switched for refrigerator operation), and an **EPEVER iPower-Plus 2000W Inverter** (supplying the main cabin AC network and high-load workshop equipment), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+This repository contains the complete **ESPHome** architecture for monitoring and controlling an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, a **Victron Phoenix 24/800 Inverter** (thermostatically switched for refrigerator operation), and an **EPEVER iPower-Plus 2000W Inverter** (supplying the main cabin AC network and high-load workshop equipment), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+
+The project is structured modularly using ESPHome `packages`, allowing flexible component configuration and seamless integration into Home Assistant or standalone ESPHome nodes.
 
 Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
-
-The system enables real-time telemetry, automated low-temperature charge management via internal heating pads, dual-inverter power scheduling, hardware thermal cut-offs, and local/long-range status monitoring.
 
 ---
 
@@ -58,7 +58,8 @@ The system enables real-time telemetry, automated low-temperature charge managem
 
 ## ⚡ Key Features
 
-* **Real-time Telemetry & LoRa Transmission:** Reads cell voltages, active balancing current, State of Charge (SoC), pack voltage, temperatures, and solar parameters, broadcasting them via LoRa for long-range off-grid monitoring.
+* **ESPHome Native Project:** Fully configured via ESPHome YAML structures. No manual C++ coding required to get telemetry, automation, and sensors running.
+* **Modular Package Design:** Uses `packages/` imports to separate BMS, MPPT, Inverter, and Display configurations.
 * **On-Demand Refrigerator Powering (Zero Standby Loss):**
   * The Victron Phoenix 24/800 is automatically enabled via its Remote H/L port only when the refrigerator thermostat requests cooling, completely eliminating inverter idle/standby power consumption.
 * **High-Power AC Management:**
@@ -68,8 +69,7 @@ The system enables real-time telemetry, automated low-temperature charge managem
 * **Automated Low-Temperature Heating:**
   * Automatically engages internal heating pads when ambient/cell temperatures drop toward freezing (< 0°C / 32°F).
   * Safely pre-heats LiFePO4 cells to acceptable operating temperatures before allowing charge power.
-* **Multi-Layer Thermal Safety Interlocks:** Combines ESP32 software logic, JK-BMS hardware heating logic, and physical bimetal temperature cutoff switches mounted directly on the heating pads to prevent thermal runaway.
-* **On-Site & Remote UI:** Displays live metrics on the integrated 0.96" OLED screen while publishing telemetry data via MQTT / LoRa.
+* **Multi-Layer Thermal Safety Interlocks:** Combines ESPHome software logic, JK-BMS hardware heating logic, and physical bimetal temperature cutoff switches mounted directly on the heating pads to prevent thermal runaway.
 
 ---
 
@@ -77,6 +77,7 @@ The system enables real-time telemetry, automated low-temperature charge managem
 
 ```text
 .
-├── packages/           # Custom drivers (RS485 Modbus, VE.Direct, JK-BMS)
-├── docs/               # System schematics, pinout diagrams, and documentation
-└── README.md           # Project documentation
+├── packages/                  # Modular ESPHome YAML packages
+├── docs/                      # Wiring schematics, register maps & pinout references
+├── andys-off-grid-cabin.yaml  # Main ESPHome entrypoint configuration
+└── README.md                  # Project documentation
