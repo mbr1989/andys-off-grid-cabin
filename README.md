@@ -6,7 +6,7 @@ An automated, ESP32-monitored off-grid power management and telemetry system for
 
 ## 📌 Overview
 
-This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-200A active balance BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, and a dedicated **Victron Phoenix 24/800 Inverter** (reserved exclusively for refrigerator operation), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, and a dedicated **Victron Phoenix 24/800 Inverter** (reserved exclusively for refrigerator operation), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
 
 Modbus RTU communication with the charge controller and BMS is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
 
@@ -38,14 +38,15 @@ The system enables real-time telemetry, automated low-temperature charge managem
   * **System Voltage:** 24 V DC (Max PV Input Power: 1250 W @ 24V)
   * **Max PV Open Circuit Voltage ($V_{oc}$):** 200 V
   * **Communication:** RS485 / Modbus RTU (115200 baud) via RJ45
-* **Battery System:** EEL 24V LiFePO4 280Ah DIY Battery Box Kit
-  * **Config:** 8S / 24V Nominal Configuration (~7.1 kWh capacity)
-  * **Cells:** 280Ah LiFePO4 prismatic cells
-  * **BMS:** Integrated JK-BMS (200A Continuous / Active Balancer) with LCD display and Bluetooth/RS485 interface
-  * **Heating:** Integrated flexible silicone heating pads inside the enclosure for sub-zero operation
+* **Battery Management System:** JK-PB2A16S20P (Inverter BMS Series)
+  * **Configuration:** 8S / 24V Nominal (~7.1 kWh capacity with 280Ah cells)
+  * **Continuous / Peak Current:** 200 A Continuous / 350 A Peak
+  * **Active Balancer:** 2.0 A active balancing current
+  * **Features (CEHMPRT Option):** CAN Bus, RS485 (Modbus), Dedicated Heating Pad Interface (`H`), Multi-Parallel support, Power Switch Port, Dry Contact Relay, NTC Temp Sensors
+  * **BLE MAC Address:** `A4:C1:38:09:08:EF`
 * **Safety & Thermal Management:**
   * Inline main battery fuse
-  * Physical bimetal hardware temperature cut-off switches mounted directly on heating pads
+  * Integrated BMS heating pad output control combined with physical bimetal hardware temperature cut-off switches mounted directly on heating pads
   * Automated ESP32 relay control for battery pre-heating & sub-zero charging protection
 
 ---
@@ -55,11 +56,11 @@ The system enables real-time telemetry, automated low-temperature charge managem
 * **Real-time Telemetry & LoRa Transmission:** Reads cell voltages, active balancing current, State of Charge (SoC), pack voltage, temperatures, and solar parameters, broadcasting them via LoRa for long-range off-grid monitoring.
 * **Dedicated Load Optimization:** Controls and monitors the Victron inverter running the refrigerator to maximize battery efficiency (e.g., via ECO mode or automated power scheduling).
 * **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for reliable Modbus RTU polling without hardware direction control pins.
-* **EPEVER & Victron Integration:** Connects via Modbus RTU (RS485) and VE.Direct (UART) to retrieve solar yield and inverter state.
+* **Multi-Protocol Telemetry:** Integrates Modbus RTU (RS485), VE.Direct (UART), and optional BLE polling for JK-BMS data retrieval.
 * **Automated Low-Temperature Heating:**
   * Automatically engages internal heating pads when ambient/cell temperatures drop toward freezing (< 0°C / 32°F).
   * Safely pre-heats LiFePO4 cells to acceptable operating temperatures before allowing charge power.
-* **Dual Thermal Safety Interlocks:** Combines ESP32 software limits with physical bimetal temperature cutoff switches mounted directly on the heating pads to prevent thermal runaway.
+* **Multi-Layer Thermal Safety Interlocks:** Combines ESP32 software logic, JK-BMS hardware heating logic, and physical bimetal temperature cutoff switches mounted directly on the heating pads to prevent thermal runaway.
 * **On-Site & Remote UI:** Displays live metrics on the integrated 0.96" OLED screen while publishing telemetry data via MQTT / LoRa.
 
 ---
