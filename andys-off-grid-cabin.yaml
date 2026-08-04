@@ -1,0 +1,117 @@
+# Board: LilyGo T3-S3
+# Definition: definitions/boards/lilygo-t3-s3/manifest.yaml
+
+substitutions:
+  bms_control_params_skip_updates: "20"   # 20 - update every 20th update cycle
+
+esphome:
+  name: andys-off-grid-cabin
+  friendly_name: "Andy's Off-Grid Cabin"
+  area: Off-Grid Cabin
+
+esp32:
+  variant: esp32s3
+  framework:
+    type: arduino
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+  # Nutzt den internen S3 USB-Port anstelle von UART0
+
+web_server:
+  port: 80
+  version: 3
+  auth:
+    username: andy
+    password: !secret andys_off_grid_cabin__web_password
+    type: digest
+
+api:
+  encryption:
+    key: !secret andys_off_grid_cabin__encryption_key
+
+packages:
+  display: !include packages/display.yaml
+  external_components: !include packages/external-components.yaml
+  ip_plus: !include packages/ip-plus.yaml
+  jk_bms: !include packages/jk-bms.yaml
+  lorawan: !include packages/lorawan.yaml
+  lorawan_payload_bindings: !include packages/lorawan-payload-bindings.yaml
+  modbus_components: !include packages/modbus-components.yaml
+  modbus_controllers: !include packages/modbus-controllers.yaml
+  tracer_rated_datum: !include packages/tracer-rated-datum.yaml
+  tracer_real_time: !include packages/tracer-real-time.yaml
+  tracer_settings: !include packages/tracer-settings.yaml
+  tracer_stats: !include packages/tracer-stats.yaml
+  uarts: !include packages/uarts.yaml
+  victron: !include packages/victron.yaml
+  wifi: !include packages/wifi.yaml
+  
+# ----------------------------------------------------------------------
+# Sensors & Devices
+# ----------------------------------------------------------------------
+sensor:
+  - platform: template
+    accuracy_decimals: 0
+    name: "MPPT Generated Charge today"
+    id: mppt_generated_charge_today
+    unit_of_measurement: "Ah"
+  - platform: template
+    id: intrusion_detection_numeric
+    name: "Intrusion Detection Numeric"
+    accuracy_decimals: 0
+    lambda: |-
+      if (id(intrusion_detection).state) {
+        return 1.0;
+      } else {
+        return 0.0;
+      }
+# ----------------------------------------------------------------------
+# EPEver Modbus Settings: SOC Management & Charging Percentage
+# ----------------------------------------------------------------------
+
+switch:
+  # Modus umschalten: OFF = Spannungssteuerung (0), ON = SOC-Steuerung (1)
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    name: "EPEver Management Mode (SOC)"
+    id: epever_management_mode_soc
+    address: 0x9070
+    register_type: holding
+
+number:
+  # Lade-Limit in % (0 - 100%)
+  # Laut Protokoll wird der Wert mit Faktor 100 gespeichert (z. B. 100 % = 10000)
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    name: "EPEver Charging Limit (%)"
+    id: epever_charging_limit_pct
+    address: 0x906E
+    register_type: holding
+    value_type: U_WORD
+    multiply: 100
+    min_value: 0
+    max_value: 100
+    step: 5
+  
+interval:
+  - interval: 5s
+    then:
+      - lambda: !lambda |-
+          // Kühlschrank / Verbraucher Cutoff bei niedrigem SOC (50% - 100% Hysterese)
+          if (id(jkbms_battery_soc).state < 50.0) {
+            // Abschaltbefehl / Schutzlogik
+          }
+    startup_delay: 0s
+
+binary_sensor:
+  - platform: gpio
+    id: intrusion_detection
+    pin:
+      number: GPIO15
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: Einbrucherkennung
+    icon: "mdi:alarm-light"
