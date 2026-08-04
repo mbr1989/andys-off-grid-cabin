@@ -1,16 +1,16 @@
 # ⚡ Andy's Off-Grid Cabin Power System
 
-An automated, ESP32-monitored off-grid power management and telemetry system for cabin energy storage, solar charge regulation, inverter management, and winter protection.
+An automated, ESP32-monitored off-grid power management and telemetry system for cabin energy storage, solar charge regulation, dual-inverter management, and winter protection.
 
 ---
 
 ## 📌 Overview
 
-This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, and a dedicated **Victron Phoenix 24/800 Inverter** (reserved exclusively for refrigerator operation), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
+This project provides a robust, self-hosted monitoring and control architecture for an off-grid solar installation. It integrates an **EEL 24V (8S) 280Ah LiFePO4 DIY Battery Box** (equipped with built-in heating pads and a **JK-PB2A16S20P Inverter BMS**), an **EPEVER Tracer 5420AN MPPT Charge Controller**, a **Victron Phoenix 24/800 Inverter** (dedicated exclusively to refrigerator operation), and an **EPEVER iPower-Plus Inverter** (supplying the main cabin AC network and workshop equipment), managed by a **LilyGO T3S3 V1.2 (ESP32-S3) MCU with LoRa support**.
 
-Modbus RTU communication with the charge controller and BMS is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
+Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is handled via a **MAX13487 Auto-Flow-Control RS485 module**.
 
-The system enables real-time telemetry, automated low-temperature charge management via internal heating pads, hardware thermal cut-offs, and local/long-range status monitoring.
+The system enables real-time telemetry, automated low-temperature charge management via internal heating pads, dual-inverter power scheduling, hardware thermal cut-offs, and local/long-range status monitoring.
 
 ---
 
@@ -26,12 +26,16 @@ The system enables real-time telemetry, automated low-temperature charge managem
   * **Auto Direction Control:** No `DE/RE` pin toggling required in firmware
   * **Level Shifting:** 3.3V / 5V TTL logic compatible
   * **Protection:** Integrated TVS surge protection diodes
-* **Dedicated Inverter (Refrigerator Load):** Victron Phoenix 24/800 VE.Direct
+* **Dedicated Refrigerator Inverter:** Victron Phoenix 24/800 VE.Direct
   * **Application:** Dedicated 230 VAC power supply exclusively for the cabin refrigerator
   * **Continuous Power:** 650 W / 800 VA @ 230 VAC (Pure Sine Wave)
   * **Peak Surge Power:** 1500 W (handles compressor start-up surges)
   * **DC Input Voltage:** 24 VDC nominal (18.4 V – 34.0 VDC operating range)
   * **Communication & Control:** VE.Direct (UART Serial interface for ESP32 telemetry) / Remote Switch Port
+* **Main Cabin & Workshop Inverter:** EPEVER iPower-Plus (IP-Plus) Series
+  * **Application:** High-power 230 VAC pure sine wave supply for general cabin power, lighting, power tools, and workshop machinery
+  * **DC Input Voltage:** 24 VDC nominal
+  * **Communication & Control:** RS485 (Modbus RTU) / Remote Switch Port for automated load shedding
 * **Solar Controller:** EPEVER Tracer 5420AN
   * **Type:** MPPT Solar Charge Controller (Tracer-AN Series)
   * **Max Charge Current:** 50 A
@@ -54,8 +58,10 @@ The system enables real-time telemetry, automated low-temperature charge managem
 ## ⚡ Key Features
 
 * **Real-time Telemetry & LoRa Transmission:** Reads cell voltages, active balancing current, State of Charge (SoC), pack voltage, temperatures, and solar parameters, broadcasting them via LoRa for long-range off-grid monitoring.
-* **Dedicated Load Optimization:** Controls and monitors the Victron inverter running the refrigerator to maximize battery efficiency (e.g., via ECO mode or automated power scheduling).
-* **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for reliable Modbus RTU polling without hardware direction control pins.
+* **Dual Inverter Architecture (Isolated Base Load & Heavy AC Loads):**
+  * Keeps the highly efficient Victron Phoenix running continuously for the refrigerator.
+  * Controls the EPEVER iPower-Plus for high-power cabin/workshop demands (tools, machinery, lighting), allowing complete remote power-down to eliminate standby current when unused.
+* **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for multi-device Modbus RTU polling (Tracer MPPT, EPEVER IP-Plus, JK-BMS) without hardware direction control pins.
 * **Multi-Protocol Telemetry:** Integrates Modbus RTU (RS485), VE.Direct (UART), and optional BLE polling for JK-BMS data retrieval.
 * **Automated Low-Temperature Heating:**
   * Automatically engages internal heating pads when ambient/cell temperatures drop toward freezing (< 0°C / 32°F).
