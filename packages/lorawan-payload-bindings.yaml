@@ -25,10 +25,10 @@ sensor:
     lorawan_id: my_lorawan
     sensor: intrusion_detection_numeric
 
-  # 6. AlarmBitmask  
+  # 6. JK-BMS AlarmBitmask  
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: alarms_bitmask  
+    sensor: jkbms_alarms_bitmask  
 
   # 7. MPPT Charging Equipment Status (0x3201)
   - platform: lorawan

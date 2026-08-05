@@ -1347,7 +1347,7 @@ sensor:
   # 0x12A0   160   UINT32    4    R    AlarmBitmask
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
-    id: alarms_bitmask
+    id: jkbms_alarms_bitmask
     name: "alarms bitmask"
     address: 0x12A0
     register_type: holding
@@ -1808,7 +1808,7 @@ text_sensor:
         "Battery Over Temp Alarm"
       };
       std::string values = "";
-      uint32_t mask = id(alarms_bitmask)->state;
+      uint32_t mask = id(jkbms_alarms_bitmask)->state;
       if (mask) {
         for (int i = 0; i < alarms_size; i++) {
           if (mask & (1 << i)) {
