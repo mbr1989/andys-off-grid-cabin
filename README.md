@@ -75,9 +75,23 @@ Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is
 
 ## 📂 Repository Structure
 
-```text
-.
-├── packages/                  # Modular ESPHome YAML packages
-├── docs/                      # Wiring schematics, register maps & pinout references
-├── andys-off-grid-cabin.yaml  # Main ESPHome entrypoint configuration
-└── README.md                  # Project documentation
+andys-off-grid-cabin/
+├── andys-off-grid-cabin.yaml
+├── packages/
+│   ├── display.yaml
+│   ├── external-components.yaml
+│   ├── ip-plus.yaml
+│   ├── jk-bms.yaml
+│   ├── lorawan.yaml
+│   ├── lorawan-payload-bindings.yaml
+│   ├── modbus-components.yaml
+│   ├── modbus-controllers.yaml
+│   ├── tracer-rated-datum.yaml
+│   ├── tracer-real-time.yaml
+│   ├── tracer-settings.yaml
+│   ├── tracer-stats.yaml
+│   ├── uarts.yaml
+│   ├── victron.yaml
+│   └── wifi.yaml
+└── ttn/
+    └── ttn-payload-formatter.js
