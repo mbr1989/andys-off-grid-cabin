@@ -1765,7 +1765,7 @@ text_sensor:
     update_interval: 60s
     lambda: |-
       std::string value = "Unknown";
-      if (id(total_runtime) && !isnan(id(total_runtime).state)) {
+      if (!isnan(id(total_runtime).state)) {
         uint32_t seconds = (uint32_t) id(total_runtime).state;
         uint32_t years = seconds / (24 * 3600 * 365);
         seconds = seconds % (24 * 3600 * 365);

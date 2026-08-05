@@ -142,8 +142,4 @@ button:
     icon: "mdi:alert-remove"
     on_press:
       - lambda: |-
-          // Statt create_write_single_coil_command:
-            auto cmd = esphome::modbus_controller::ModbusCommandItem::create_write_single_register_command(
-            this, address, value
-            );
-          id(modbus_ctl_epever_ip_plus)->queue_command(cmd);
+          id(modbus_ctl_epever_ip_plus)->send(0x06, 0x0001, 0x0001);
