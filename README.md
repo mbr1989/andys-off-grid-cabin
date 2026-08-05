@@ -73,14 +73,6 @@ Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is
 
 ---
 
-## 📂 Repository Structure
-
-# Andy's Off-Grid Cabin Monitoring System
-
-Ein bandbreiteneffizientes, autarkes Überwachungs- und LoRaWAN-Telemetriesystem für eine Off-Grid-Hütte. Die Steuerung und Datenerfassung basiert auf **ESPHome** auf einem **LilyGO T3S3 (ESP32-S3)**, welches Messwerte und Systemzustände mehrerer Solarkomponenten über Modbus/RS485 und VE.Direct aggregiert, lokal auf einem OLED-Display anzeigt und hochkomprimiert über LoRaWAN an **The Things Network (TTN)** übermittelt.
-
----
-
 ## 📁 Repository-Struktur
 
 ```text
