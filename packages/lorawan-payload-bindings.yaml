@@ -4,18 +4,48 @@ sensor:
   - platform: lorawan
     lorawan_id: my_lorawan
     sensor: mppt_generated_charge_today
+
   # 2. Solar Power
-  # ID aus package/tracer-real-time.yaml
   - platform: lorawan
     lorawan_id: my_lorawan
     sensor: mppt_charging_power   
+
   # 3. Battery SOC
-  # ID aus package/jk-bms-sensors.yaml
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: jkbms_battery_soc           
-  # 4.Einbrucherkennung
+    sensor: jkbms_battery_soc     
+
+  # 4. HeatCurrent   
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: jkbms_heating_current
+
+  # 5. Einbrucherkennung
   - platform: lorawan
     lorawan_id: my_lorawan
     sensor: intrusion_detection_numeric
-    
+
+  # 6. AlarmBitmask  
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: alarms_bitmask  
+
+  # 7. MPPT Charging Equipment Status (0x3201)
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: mppt_charger_status
+
+  # 8. IP-Plus Inverter Status Bitmask (0x3202)
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: ip_plus_status_bitmask
+
+  # 9. Victron Phoenix Warning Code
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: victron_warning_code
+
+  # 10. Victron Phoenix OFF Reason Bitmask
+  - platform: lorawan
+    lorawan_id: my_lorawan
+    sensor: victron_off_reason_bitmask

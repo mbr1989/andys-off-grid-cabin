@@ -18,8 +18,10 @@ sensor:
       name: "Victron Phoenix AC OUT Apparent Power"
     warning_code:
       name: "Victron Phoenix Warning Code"
+      id: victron_warning_code
     off_reason_bitmask:
       name: "Victron Phoenix OFF Reason Bitmask"
+      id: victron_off_reason_bitmask
       
 text_sensor:
   - platform: victron
