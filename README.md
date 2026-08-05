@@ -75,23 +75,33 @@ Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is
 
 ## 📂 Repository Structure
 
+# Andy's Off-Grid Cabin Monitoring System
+
+Ein bandbreiteneffizientes, autarkes Überwachungs- und LoRaWAN-Telemetriesystem für eine Off-Grid-Hütte. Die Steuerung und Datenerfassung basiert auf **ESPHome** auf einem **LilyGO T3S3 (ESP32-S3)**, welches Messwerte und Systemzustände mehrerer Solarkomponenten über Modbus/RS485 und VE.Direct aggregiert, lokal auf einem OLED-Display anzeigt und hochkomprimiert über LoRaWAN an **The Things Network (TTN)** übermittelt.
+
+---
+
+## 📁 Repository-Struktur
+
+```text
 andys-off-grid-cabin/
-├── andys-off-grid-cabin.yaml
-├── packages/
-│   ├── display.yaml
-│   ├── external-components.yaml
-│   ├── ip-plus.yaml
-│   ├── jk-bms.yaml
-│   ├── lorawan.yaml
-│   ├── lorawan-payload-bindings.yaml
-│   ├── modbus-components.yaml
-│   ├── modbus-controllers.yaml
-│   ├── tracer-rated-datum.yaml
-│   ├── tracer-real-time.yaml
-│   ├── tracer-settings.yaml
-│   ├── tracer-stats.yaml
-│   ├── uarts.yaml
-│   ├── victron.yaml
-│   └── wifi.yaml
+├── andys-off-grid-cabin.yaml       # Haupt-YAML (ESPHome Gateway & Target-Definition)
+├── README.md                       # Projektdokumentation
+├── packages/                       # Modulare ESPHome Package-Dateien
+│   ├── display.yaml                # OLED Display Konfiguration & Screen-Layout
+│   ├── external-components.yaml    # Externe ESPHome-Komponenten (z. B. LoRaWAN/SX1262)
+│   ├── ip-plus.yaml                # EPEver IP-Plus Inverter Modbus-Register
+│   ├── jk-bms.yaml                 # JK-BMS Modbus-Register & Sensoren
+│   ├── lorawan.yaml                # LoRaWAN Client & Key-Konfiguration
+│   ├── lorawan-payload-bindings.yaml# Byte-Packing für den 26-Byte Uplink
+│   ├── modbus-components.yaml     # ESPHome Modbus-Komponenten
+│   ├── modbus-controllers.yaml    # Modbus Controller-Setups für RS485-Teilnehmer
+│   ├── tracer-rated-datum.yaml    # EPEver Tracer Solarladeregler Spezifikationen
+│   ├── tracer-real-time.yaml      # EPEver Tracer Echtzeitdaten (Leistung, Ertrag)
+│   ├── tracer-settings.yaml       # EPEver Tracer Ladeparameter
+│   ├── tracer-stats.yaml          # EPEver Tracer Statistiken & Zähler
+│   ├── uarts.yaml                 # UART-Pins für RS485 & VE.Direct
+│   ├── victron.yaml               # Victron VE.Direct Protocol Sensoren
+│   └── wifi.yaml                  # Fallback-WLAN / OTA Konfiguration
 └── ttn/
-    └── ttn-payload-formatter.js
+    └── ttn-payload-formatter.js   # JavaScript Uplink-Decoder für die TTN Console
