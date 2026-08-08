@@ -65,7 +65,7 @@ Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is
 * **High-Power AC Management:**
   * Controls the **2000W EPEVER iPower-Plus** for heavy cabin/workshop demands (power tools, machinery, heavy appliances) with up to 4000W surge capacity, allowing remote automated power-down when not in use.
 * **Seamless RS485 Auto-Flow Control:** Uses the MAX13487 Transceiver for multi-device Modbus RTU polling (Tracer MPPT, EPEVER IP2000, JK-BMS) without hardware direction control pins.
-* **Multi-Protocol Telemetry:** Integrates Modbus RTU (RS485), VE.Direct (UART), and optional BLE polling for JK-BMS data retrieval.
+* **Multi-Protocol Telemetry:** Integrates Modbus RTU (RS485), VE.Direct (UART).
 * **Automated Low-Temperature Heating:**
   * Automatically engages internal heating pads when ambient/cell temperatures drop toward freezing (< 0°C / 32°F).
   * Safely pre-heats LiFePO4 cells to acceptable operating temperatures before allowing charge power.
