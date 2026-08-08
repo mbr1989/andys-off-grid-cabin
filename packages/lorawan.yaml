@@ -14,6 +14,6 @@ lorawan:
    miso_pin: GPIO3
    mosi_pin: GPIO6
   # Bitte mit deinen TTN-Credentials ersetzen (HEX Format):
-  dev_eui: "0000000000000000"
+  dev_eui: andys_off_grid_cabin__dev_eui
   join_eui: "0000000000000000"
-  app_key: "00000000000000000000000000000000"
+  app_key: andys_off_grid_cabin__app_key
