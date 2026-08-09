@@ -101,24 +101,24 @@ interval:
           if (!isnan(id(jkbms_battery_soc).state)) {
             float soc = id(jkbms_battery_soc).state;
             
-            // Statische Variable speichert den Schaltzustand im RAM
+            // Merker für den aktuellen Zustand des Inverters (im RAM)
             static bool victron_is_off = false;
 
             // 1. ABSCHALTEN: SoC fällt unter 50%
             if (soc < 50.0 && !victron_is_off) {
-              ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX: Inverter AUS!", soc);
+              ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter AUS!", soc);
               
-              // Direct Frame senden: Register 0x0200 auf 1 (Off)
-              id(victron_uart).write_str(":70002000100F2\n");
+              // Frame schaltet Register 0x0200 auf Mode 1 (Off)
+              id(uart_victron).write_str(":70002000100F2\n");
               victron_is_off = true;
             }
             
-            // 2. WIEDEREINSCHALTEN: SoC steigt auf >= 70% (Hysterese)
+            // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese)
             else if (soc >= 70.0 && victron_is_off) {
-              ESP_LOGI("main", "JK-BMS SoC erholt (>= 70%%: %.1f%%) - Sende VE.Direct HEX: Inverter EIN!", soc);
+              ESP_LOGI("main", "JK-BMS SoC erholt (>= 70%%: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter EIN!", soc);
               
-              // Direct Frame senden: Register 0x0200 auf 3 (On)
-              id(victron_uart).write_str(":70002000300F0\n");
+              // Frame schaltet Register 0x0200 auf Mode 3 (On)
+              id(uart_victron).write_str(":70002000300F0\n");
               victron_is_off = false;
             }
           }
