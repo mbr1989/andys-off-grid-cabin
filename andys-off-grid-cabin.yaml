@@ -34,6 +34,12 @@ globals:
   - id: victron_is_off
     type: bool
     initial_value: 'false'
+  - id: fridge_cutoff_soc
+    type: float
+    initial_value: '50.0' # Default 50% Abschaltgrenze
+  - id: fridge_restore_soc
+    type: float
+    initial_value: '70.0' # Default 70% Wiedereinschaltung
 
 packages:
   display: !include packages/display.yaml
@@ -105,28 +111,23 @@ number:
 interval:
   - interval: 5s
     then:
-      - lambda: !lambda |-
-          if (!isnan(id(jkbms_battery_soc).state)) {
-            float soc = id(jkbms_battery_soc).state;
-            
-            // 1. ABSCHALTEN: SoC fällt unter 50%
-            if (soc < 50.0 && !id(victron_is_off)) {
-              ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter AUS!", soc);
-              
-              // Frame schaltet Register 0x0200 auf Mode 1 (Off)
-              id(uart_victron).write_str(":70002000100F2\n");
-              id(victron_is_off) = true;
-            }
-            
-            // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese)
-            else if (soc >= 70.0 && id(victron_is_off)) {
-              ESP_LOGI("main", "JK-BMS SoC erholt (>= 70%%: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter EIN!", soc);
-              
-              // Frame schaltet Register 0x0200 auf Mode 3 (On)
-              id(uart_victron).write_str(":70002000300F0\n");
-              id(victron_is_off) = false;
-            }
-          }
+      lambda: |-
+      if (id(jkbms_soc).has_state()) {
+        float soc = id(jkbms_soc).state;
+        float cutoff = id(fridge_cutoff_soc);
+        float restore = id(fridge_restore_soc);
+
+        // Abschalten bei Unterschreiten des Cutoff-SoC
+        if (soc < cutoff && !id(victron_is_off)) {
+          ESP_LOGI("custom_logic", "SoC unter Cutoff (%.0f%%) - Victron deaktiviert", cutoff);
+          id(victron_is_off) = true;
+        } 
+        // Einschalten bei Erreichen des Restore-SoC
+        else if (soc >= restore && id(victron_is_off)) {
+          ESP_LOGI("custom_logic", "SoC ausreichend (>= %.0f%%) - Victron freigegeben", restore);
+          id(victron_is_off) = false;
+        }
+      }
     startup_delay: 0s
     
 # ----------------------------------------------------------------------
