@@ -95,14 +95,30 @@ number:
     step: 5
   
 interval:
-  - interval: 5s
+
+  - interval: 10s
     then:
       - lambda: !lambda |-
-          // Kühlschrank / Verbraucher Cutoff bei niedrigem SOC (50% - 100% Hysterese)
-          if (id(jkbms_battery_soc).state < 50.0) {
-            // Abschaltbefehl / Schutzlogik
+          // Prüfen, ob der Ladezustand vom JK-BMS valide vorliegt
+          if (!isnan(id(jkbms_battery_soc).state)) {
+            float soc = id(jkbms_battery_soc).state;
+
+            // 1. KATASTROPHENschutz / CUTOFF: SoC fällt unter 50%
+            if (soc < 50.0) {
+              // Falls der Victron aktuell noch eingeschaltet ist -> Abschalten!
+              if (id(victron_inverter_switch).state) {
+                ESP_LOGW("main", "SoC unter 50%% (Aktuell: %.1f%%) - Schalte Victron Wechselrichter AUS!", soc);
+                id(victron_inverter_switch).turn_off();
+              }
+            }
+            // 2. ERHOLUNG / WIEDEREINSCHALTEN: SoC erholt sich über 70% (Hysterese gegen Dauerklappern)
+            else if (soc >= 70.0) {
+              if (!id(victron_inverter_switch).state) {
+                ESP_LOGI("main", "SoC erholt (>= 70%%: %.1f%%) - Schalte Victron Wechselrichter wieder EIN!", soc);
+                id(victron_inverter_switch).turn_on();
+              }
+            }
           }
-    startup_delay: 0s
     
   - interval: 20s
     then:
