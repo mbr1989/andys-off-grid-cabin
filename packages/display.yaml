@@ -53,20 +53,29 @@ display:
           it.printf(128, 50, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", vic_pwr);
 
       # ----------------------------------------------------------------
-      # SEITE 2: Kühlschrank Status
+      # SEITE 2: Kühlschrank Freigabe & SoC-Grenzwerte
       # ----------------------------------------------------------------
       - id: page_fridge
         lambda: |-
           it.printf(0, 0, id(font_large), "KUEHLSCHRANK");
           it.line(0, 15, 128, 15);
 
+          // Freigabe-Zeile
           if (id(victron_is_off)) {
-            it.printf(0, 24, id(font_large), "GESPERRT");
-            it.printf(0, 44, id(font_small), "Victron Inverter AUS");
+            it.printf(0, 18, id(font_large), "GESPERRT");
           } else {
-            it.printf(0, 24, id(font_large), "FREIGEGEBEN");
-            it.printf(0, 44, id(font_small), "Victron Inverter AN");
+            it.printf(0, 18, id(font_large), "FREIGEGEBEN");
           }
+
+          // Anzeige der aktuellen Schwellwerte
+          float cutoff = id(fridge_cutoff_soc);
+          float restore = id(fridge_restore_soc);
+
+          it.printf(0, 38, id(font_small), "Sperre unter:");
+          it.printf(128, 38, id(font_small), TextAlign::TOP_RIGHT, "%.0f %%", cutoff);
+
+          it.printf(0, 50, id(font_small), "Freigabe ab:");
+          it.printf(128, 50, id(font_small), TextAlign::TOP_RIGHT, "%.0f %%", restore);
 
 interval:
   - interval: 6s
