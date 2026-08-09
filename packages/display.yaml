@@ -43,13 +43,14 @@ display:
 
           // 3. EPEver IP-Plus Inverter (ip-plus.yaml)
           float ip_pwr = !isnan(id(ip_plus_output_power).state) ? id(ip_plus_output_power).state : 0.0;
-          it.printf(0, 39, id(font_small), "IP-Plus:");
+          it.printf(0, 39, id(font_small), "230 Volt Netz:");
           it.printf(128, 39, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", ip_pwr);
 
-          // 4. Victron Phoenix Inverter (victron.yaml)
-          float vic_pwr = !isnan(id(victron_ac_out_apparent_power).state) ? id(victron_ac_out_apparent_power).state : 0.0;
-          it.printf(0, 50, id(font_small), "Victron:");
-          it.printf(128, 50, id(font_small), TextAlign::TOP_RIGHT, "%.0f VA", vic_pwr);
+          // 4. Victron Phoenix Inverter (Embraco EMD20CLT Korrektur: cos phi ~ 0.60)
+          float vic_va = !isnan(id(victron_ac_out_apparent_power).state) ? id(victron_ac_out_apparent_power).state : 0.0;
+          float vic_pwr = (vic_va >= 18.0f) ? (vic_va * 0.60f) : 0.0f;
+          it.printf(0, 50, id(font_small), "Kühlschrank");
+          it.printf(128, 50, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", vic_pwr);
 
       # ----------------------------------------------------------------
       # SEITE 2: Kühlschrank Status
