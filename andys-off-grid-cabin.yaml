@@ -96,29 +96,33 @@ number:
   
 interval:
 
-  - interval: 10s
+   - interval: 5s
     then:
       - lambda: !lambda |-
-          // Prüfen, ob der Ladezustand vom JK-BMS valide vorliegt
+          // Prüfen, ob der SoC-Wert vom JK-BMS gültig ist
           if (!isnan(id(jkbms_battery_soc).state)) {
             float soc = id(jkbms_battery_soc).state;
 
-            // 1. KATASTROPHENschutz / CUTOFF: SoC fällt unter 50%
+            // 1. ABSCHALTEN: SoC fällt unter 50%
             if (soc < 50.0) {
-              // Falls der Victron aktuell noch eingeschaltet ist -> Abschalten!
-              if (id(victron_inverter_switch).state) {
-                ESP_LOGW("main", "SoC unter 50%% (Aktuell: %.1f%%) - Schalte Victron Wechselrichter AUS!", soc);
-                id(victron_inverter_switch).turn_off();
+              if (id(victron_phoenix_mode).state != "Off") {
+                ESP_LOGW("main", "SoC unter 50%% (Aktuell: %.1f%%) - Schalte Victron per VE.Direct AUS!", soc);
+                auto call = id(victron_phoenix_mode).make_call();
+                call.set_option("Off");
+                call.perform();
               }
             }
-            // 2. ERHOLUNG / WIEDEREINSCHALTEN: SoC erholt sich über 70% (Hysterese gegen Dauerklappern)
+            // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese gegen Dauerklappern)
             else if (soc >= 70.0) {
-              if (!id(victron_inverter_switch).state) {
-                ESP_LOGI("main", "SoC erholt (>= 70%%: %.1f%%) - Schalte Victron Wechselrichter wieder EIN!", soc);
-                id(victron_inverter_switch).turn_on();
+              if (id(victron_phoenix_mode).state != "On") {
+                ESP_LOGI("main", "SoC erholt (>= 70%%: %.1f%%) - Schalte Victron per VE.Direct wieder EIN!", soc);
+                auto call = id(victron_phoenix_mode).make_call();
+                call.set_option("On");
+                call.perform();
               }
             }
           }
+    startup_delay: 0s
     
   - interval: 20s
     then:
