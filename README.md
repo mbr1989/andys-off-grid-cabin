@@ -22,7 +22,7 @@ Modbus RTU communication with the charge controller, BMS, and EPEVER inverter is
   * **Display:** Onboard 0.96" OLED (128x64) for real-time status UI
   * **Storage:** Integrated MicroSD card slot for offline data logging
   * **Power:** USB-C & Integrated LiPo Battery Charger with ADC voltage monitoring
-* **RS485 Bus Interface:** [QCCAN RS485 Board with MAX13487](https://www.amazon.com/QCCAN-RS485-Board-MAX13487-Raspberry/dp/B0B9XT9HM8)
+* **RS485 Bus Interface:** [DSD TECH SH-U12 RS485 zu TTL 5V Brett mit MAX13487 Chip für Raspberry Pi Arduino und andere MCU 7](https://www.amazon.de/DSD-TECH-SH-U12-MAX13487-Raspberry/dp/B07B667STP/ref=asc_df_B07B667STP?mcid=b4f67c0ef2563d549dbb3b27f2407a43&th=1&psc=1&tag=googshopde-21&linkCode=df0&hvadid=696925076301&hvpos=&hvnetw=g&hvrand=13560754768488641598&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9042261&hvtargid=pla-723893162356&psc=1&hvocijid=13560754768488641598-B07B667STP-&hvexpln=0)
   * **Auto Direction Control:** No `DE/RE` pin toggling required in firmware
   * **Level Shifting:** 3.3V / 5V TTL logic compatible
   * **Protection:** Integrated TVS surge protection diodes
