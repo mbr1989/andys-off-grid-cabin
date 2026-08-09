@@ -98,27 +98,28 @@ interval:
   - interval: 5s
     then:
       - lambda: !lambda |-
-          // Prüfen, ob der SoC-Wert vom JK-BMS gültig ist
           if (!isnan(id(jkbms_battery_soc).state)) {
             float soc = id(jkbms_battery_soc).state;
+            
+            // Statische Variable speichert den Schaltzustand im RAM
+            static bool victron_is_off = false;
 
             // 1. ABSCHALTEN: SoC fällt unter 50%
-            if (soc < 50.0) {
-              if (id(victron_phoenix_mode).state != "Off") {
-                ESP_LOGW("main", "SoC unter 50%% (Aktuell: %.1f%%) - Schalte Victron per VE.Direct AUS!", soc);
-                auto call = id(victron_phoenix_mode).make_call();
-                call.set_option("Off");
-                call.perform();
-              }
+            if (soc < 50.0 && !victron_is_off) {
+              ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX: Inverter AUS!", soc);
+              
+              // Direct Frame senden: Register 0x0200 auf 1 (Off)
+              id(victron_uart).write_str(":70002000100F2\n");
+              victron_is_off = true;
             }
-            // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese gegen Dauerklappern)
-            else if (soc >= 70.0) {
-              if (id(victron_phoenix_mode).state != "On") {
-                ESP_LOGI("main", "SoC erholt (>= 70%%: %.1f%%) - Schalte Victron per VE.Direct wieder EIN!", soc);
-                auto call = id(victron_phoenix_mode).make_call();
-                call.set_option("On");
-                call.perform();
-              }
+            
+            // 2. WIEDEREINSCHALTEN: SoC steigt auf >= 70% (Hysterese)
+            else if (soc >= 70.0 && victron_is_off) {
+              ESP_LOGI("main", "JK-BMS SoC erholt (>= 70%%: %.1f%%) - Sende VE.Direct HEX: Inverter EIN!", soc);
+              
+              // Direct Frame senden: Register 0x0200 auf 3 (On)
+              id(victron_uart).write_str(":70002000300F0\n");
+              victron_is_off = false;
             }
           }
     startup_delay: 0s
