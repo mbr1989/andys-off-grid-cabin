@@ -49,4 +49,3 @@ binary_sensor:
     victron_id: victron_phoenix
     relay_state:
       name: "Victron Phoenix Relay State"
- 
