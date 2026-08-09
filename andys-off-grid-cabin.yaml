@@ -40,6 +40,12 @@ globals:
   - id: fridge_restore_soc
     type: float
     initial_value: '70.0' # Default 70% Wiedereinschaltung
+  - id: coming_home_active
+    type: bool
+    initial_value: 'false'
+  - id: leaving_home_active
+    type: bool
+    initial_value: 'false'
 
 packages:
   display: !include packages/display.yaml
@@ -168,3 +174,58 @@ binary_sensor:
       inverted: true
     name: Einbrucherkennung
     icon: "mdi:alarm-light"
+    
+script:
+  # --------------------------------------------------------------------
+  # COMING HOME (Fernstart per LoRaWAN auf Port 2)
+  # --------------------------------------------------------------------
+  - id: trigger_coming_home
+    then:
+      - lambda: |-
+          // Prüfe Status Bit D0 aus 0x3202
+          uint16_t status_mask = (uint16_t)id(ip_plus_status_bitmask).state;
+          bool is_running = (status_mask & 0x0001) != 0;
+
+          if (is_running) {
+            ESP_LOGI("coming_home", "IP-Plus läuft bereits vor Ort (D0=1). Remote-Start ignoriert.");
+            return;
+          }
+
+          ESP_LOGI("coming_home", "Coming Home gestartet! Schalte IP-Plus auf Remote & EIN...");
+          id(coming_home_active) = true;
+
+          // 1. Modbus-Register 0x0011 auf Remote (0)
+          // 2. Modbus-Register 0x000F auf EIN (1)
+          id(ip_plus_control_mode).turn_off(); // 0 = Remote
+          id(ip_plus_output_switch).turn_on();  // 1 = Turn ON
+
+      - delay: 30min # Coming Home Zeitfenster
+
+      - lambda: |-
+          ESP_LOGI("coming_home", "Coming Home beendet. Gehe zurück in Local-Modus...");
+          id(coming_home_active) = false;
+          
+          // Zurück auf Local (1) schalten
+          id(ip_plus_control_mode).turn_on(); // 1 = Local
+
+  # --------------------------------------------------------------------
+  # LEAVING HOME (Ausschalten vor Ort erkannt -> 5s Pause + 30 Min Nachlauf)
+  # --------------------------------------------------------------------
+  - id: trigger_leaving_home
+    then:
+      - ESP_LOGI("leaving_home", "Vor-Ort Schalter AUS erkannt! Leaving Home startet in 5 Sekunden...");
+      - delay: 5s
+      
+      // Optische Quittung & Nachlauf starten
+      - lambda: |-
+          id(leaving_home_active) = true;
+          id(ip_plus_control_mode).turn_off(); // 0 = Remote
+          id(ip_plus_output_switch).turn_on();  // 1 = Turn ON
+
+      - delay: 30min # Nachlauf-Dauer
+
+      - lambda: |-
+          ESP_LOGI("leaving_home", "Leaving Home Nachlauf beendet. Schalte IP-Plus sauber AUS...");
+          id(ip_plus_output_switch).turn_off(); // 0 = Turn OFF
+          id(ip_plus_control_mode).turn_on();  // 1 = Local
+          id(leaving_home_active) = false;
