@@ -103,6 +103,25 @@ interval:
             // Abschaltbefehl / Schutzlogik
           }
     startup_delay: 0s
+    
+  - interval: 20s
+    then:
+      - if:
+          condition:
+            and:
+              # 1. PV-Eingangsspannung prüfen (> 35 V)
+              - lambda: !lambda |-
+                  return !isnan(id(mppt_pv_input_voltage).state) && id(mppt_pv_input_voltage).state > 35.0;
+
+              # 2. Entladestrom am JK-BMS prüfen (Strom ist negativ beim Entladen, z. B. < -2.0 A)
+              - lambda: !lambda |-
+                  return !isnan(id(current).state) && id(current).state < -2.0;
+
+              # 3. Ladestrom am EPEver prüfen (EPEver hängt fest bei < 0.5 A)
+              - lambda: !lambda |-
+                  return !isnan(id(mppt_charging_current).state) && id(mppt_charging_current).state < 0.5;
+          then:
+            - script.execute: force_mppt_reconnect
 
 binary_sensor:
   - platform: gpio
