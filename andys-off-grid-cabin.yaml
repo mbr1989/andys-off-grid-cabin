@@ -95,8 +95,7 @@ number:
     step: 5
   
 interval:
-
-   - interval: 5s
+  - interval: 5s
     then:
       - lambda: !lambda |-
           // Prüfen, ob der SoC-Wert vom JK-BMS gültig ist
