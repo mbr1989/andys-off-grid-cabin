@@ -92,7 +92,11 @@ number:
     min_value: 0
     max_value: 100
     step: 5
-  
+ 
+# ----------------------------------------------------------------------
+# EPEver Modbus Settings: SOC Management & Charging Percentage
+# ----------------------------------------------------------------------
+
 interval:
   - interval: 5s
     then:
@@ -123,6 +127,10 @@ interval:
           }
     startup_delay: 0s
     
+# ----------------------------------------------------------------------
+# SOC Management & Charging
+# ----------------------------------------------------------------------
+  
   - interval: 20s
     then:
       - if:
@@ -141,6 +149,10 @@ interval:
                   return !isnan(id(mppt_charging_current).state) && id(mppt_charging_current).state < 0.5;
           then:
             - script.execute: force_mppt_reconnect
+
+# ----------------------------------------------------------------------
+# Intrusion Detection
+# ----------------------------------------------------------------------
 
 binary_sensor:
   - platform: gpio
