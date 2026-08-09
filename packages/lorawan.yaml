@@ -25,17 +25,22 @@ lorawan:
   on_downlink:
     then:
       - lambda: |-
-          // Erwartet Downlink auf Port 1 mit 2 Bytes (Cutoff SoC & Restore SoC)
+          // PORT 1: SoC-Grenzwerte anpassen (Byte 0 = Cutoff, Byte 1 = Restore)
           if (port == 1 && payload.size() >= 2) {
             uint8_t new_cutoff = payload[0];
             uint8_t new_restore = payload[1];
 
-            // Plausibilitätsprüfung: Cutoff min 10%, Restore max 95%, Hysterese min 5%
             if (new_cutoff >= 10 && new_restore <= 95 && new_restore >= (new_cutoff + 5)) {
               id(fridge_cutoff_soc) = (float)new_cutoff;
               id(fridge_restore_soc) = (float)new_restore;
-              ESP_LOGI("lorawan_downlink", "Grenzwerte angepasst: AUS bei %d%%, AN bei %d%%", new_cutoff, new_restore);
-            } else {
-              ESP_LOGW("lorawan_downlink", "Ungültige Grenzwerte empfangen: Cutoff=%d%%, Restore=%d%%", new_cutoff, new_restore);
+              ESP_LOGI("lorawan_downlink", "SoC-Grenzwerte angepasst: AUS=%d%%, AN=%d%%", new_cutoff, new_restore);
+            }
+          }
+          
+          // PORT 2: Coming Home Fernstart anfordern (1 Byte Payload, z.B. 0x01)
+          else if (port == 2 && payload.size() >= 1) {
+            if (payload[0] == 0x01) {
+              ESP_LOGI("lorawan_downlink", "Coming Home Impuls per LoRaWAN empfangen!");
+              id(trigger_coming_home).execute();
             }
           }

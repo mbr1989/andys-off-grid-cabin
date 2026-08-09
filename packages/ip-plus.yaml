@@ -118,6 +118,24 @@ sensor:
     skip_updates: 60
     register_type: read
     value_type: U_WORD
+    on_value:
+      then:
+        - lambda: |-
+            static bool last_run_state = false;
+            
+            // Bit D0 extrahieren (1 = Running, 0 = Stopped)
+            bool current_run_state = ((uint16_t)x & 0x0001) != 0;
+
+            // Wenn der Inverter von RUN (1) auf STOP (0) wechselt (Schalter vor Ort aus)...
+            if (last_run_state && !current_run_state) {
+              // ... und weder Coming Home noch Leaving Home bereits laufen:
+              if (!id(coming_home_active) && !id(leaving_home_active)) {
+                // Skript für Leaving Home starten
+                id(trigger_leaving_home).execute();
+              }
+            }
+
+            last_run_state = current_run_state;
 
 # --- Remote Steuerung & Schalter (Coils) ---
 switch:
