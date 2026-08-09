@@ -110,12 +110,12 @@ interval:
             float soc = id(jkbms_battery_soc).state;
             
             // 1. ABSCHALTEN: SoC fällt unter 50%
-            if (soc < 50.0 && !victron_is_off) {
+            if (soc < 50.0 && !id(victron_is_off).value) {
               ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter AUS!", soc);
               
               // Frame schaltet Register 0x0200 auf Mode 1 (Off)
               id(uart_victron).write_str(":70002000100F2\n");
-              victron_is_off = true;
+              id(victron_is_off).value = true;
             }
             
             // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese)
@@ -124,7 +124,7 @@ interval:
               
               // Frame schaltet Register 0x0200 auf Mode 3 (On)
               id(uart_victron).write_str(":70002000300F0\n");
-              victron_is_off = false;
+              id(victron_is_off).value = false;
             }
           }
     startup_delay: 0s
