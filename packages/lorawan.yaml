@@ -16,7 +16,26 @@ lorawan:
      ignore_strapping_warning: true  # Schaltet die ESPHome-Warnung für diesen Pin stumm
    mosi_pin: GPIO6
 
-  # Bitte mit deinen TTN-Credentials ersetzen (HEX Format):
+  # TTN-Credentials (HEX Format via secrets.yaml):
   dev_eui: !secret andys_off_grid_cabin__dev_eui
   join_eui: "0000000000000000"
   app_key: !secret andys_off_grid_cabin__app_key
+  
+  # Downlink-Handler für dynamische SoC-Grenzwerte (Port 1, 2 Bytes)
+  on_downlink:
+    then:
+      - lambda: |-
+          // Erwartet Downlink auf Port 1 mit 2 Bytes (Cutoff SoC & Restore SoC)
+          if (port == 1 && payload.size() >= 2) {
+            uint8_t new_cutoff = payload[0];
+            uint8_t new_restore = payload[1];
+
+            // Plausibilitätsprüfung: Cutoff min 10%, Restore max 95%, Hysterese min 5%
+            if (new_cutoff >= 10 && new_restore <= 95 && new_restore >= (new_cutoff + 5)) {
+              id(fridge_cutoff_soc) = (float)new_cutoff;
+              id(fridge_restore_soc) = (float)new_restore;
+              ESP_LOGI("lorawan_downlink", "Grenzwerte angepasst: AUS bei %d%%, AN bei %d%%", new_cutoff, new_restore);
+            } else {
+              ESP_LOGW("lorawan_downlink", "Ungültige Grenzwerte empfangen: Cutoff=%d%%, Restore=%d%%", new_cutoff, new_restore);
+            }
+          }
