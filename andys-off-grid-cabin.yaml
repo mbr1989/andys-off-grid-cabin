@@ -119,7 +119,7 @@ interval:
             }
             
             // 2. WIEDEREINSCHALTEN: SoC steigt wieder auf >= 70% (Hysterese)
-            else if (soc >= 70.0 && victron_is_off) {
+            else if (soc >= 70.0 && id(victron_is_off).value) {
               ESP_LOGI("main", "JK-BMS SoC erholt (>= 70%%: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter EIN!", soc);
               
               // Frame schaltet Register 0x0200 auf Mode 3 (On)
