@@ -109,9 +109,6 @@ interval:
           if (!isnan(id(jkbms_battery_soc).state)) {
             float soc = id(jkbms_battery_soc).state;
             
-            // Merker für den aktuellen Zustand des Inverters (im RAM)
-            static bool victron_is_off = false;
-
             // 1. ABSCHALTEN: SoC fällt unter 50%
             if (soc < 50.0 && !victron_is_off) {
               ESP_LOGW("main", "JK-BMS SoC unter 50%% (Aktuell: %.1f%%) - Sende VE.Direct HEX an uart_victron: Inverter AUS!", soc);
