@@ -182,7 +182,7 @@ script:
   - id: trigger_coming_home
     then:
       - lambda: |-
-          // Prüfe Status Bit D0 aus 0x3202
+          // Prüfe Status Bit D0 aus Register 0x3202
           if (id(ip_plus_status_bitmask).has_state()) {
             uint16_t status_mask = (uint16_t)id(ip_plus_status_bitmask).state;
             bool is_running = (status_mask & 0x0001) != 0;
@@ -196,17 +196,19 @@ script:
           ESP_LOGI("coming_home", "Coming Home gestartet! Schalte IP-Plus auf Remote & EIN...");
           id(coming_home_active) = true;
 
-          // 1. Modbus-Register 0x0011 auf Remote (0)
-          // 2. Modbus-Register 0x000F auf EIN (1)
-          id(ip_plus_control_mode).turn_off();
-          id(ip_plus_output_switch).turn_on();
+          // 1. Umschalten von Lokal auf Remote (0x0011)
+          id(ip_plus_remote_mode).turn_on();
+          // 2. Inverter Ausgang aktivieren (0x000F)
+          id(ip_plus_output_enable).turn_on();
 
-      - delay: 30min
+      - delay: 30min # Gewünschte Coming-Home-Dauer
 
       - lambda: |-
           ESP_LOGI("coming_home", "Coming Home beendet. Gehe zurück in Local-Modus...");
+          // Inverter-Ausgang ausschalten & zurück auf Local setzen
+          id(ip_plus_output_enable).turn_off();
+          id(ip_plus_remote_mode).turn_off();
           id(coming_home_active) = false;
-          id(ip_plus_control_mode).turn_on();
 
   # --------------------------------------------------------------------
   # LEAVING HOME (Ausschalten vor Ort erkannt -> 5s Pause + 30 Min Nachlauf)
@@ -217,14 +219,19 @@ script:
       - delay: 5s
 
       - lambda: |-
+          ESP_LOGI("leaving_home", "Leaving Home aktiv! Starte Nachlauf...");
           id(leaving_home_active) = true;
-          id(ip_plus_control_mode).turn_off();
-          id(ip_plus_output_switch).turn_on();
 
-      - delay: 30min
+          // 1. Remote Mode aktivieren
+          id(ip_plus_remote_mode).turn_on();
+          // 2. Inverter für Nachlauf einschalten
+          id(ip_plus_output_enable).turn_on();
+
+      - delay: 30min # Gewünschte Nachlauf-Dauer
 
       - lambda: |-
           ESP_LOGI("leaving_home", "Leaving Home Nachlauf beendet. Schalte IP-Plus sauber AUS...");
-          id(ip_plus_output_switch).turn_off();
-          id(ip_plus_control_mode).turn_on();
+          // Inverter ausschalten & zurück in den Local-Modus übergeben
+          id(ip_plus_output_enable).turn_off();
+          id(ip_plus_remote_mode).turn_off();
           id(leaving_home_active) = false;
