@@ -465,3 +465,25 @@ sensor:
     filters:
       - lambda: |-
           return static_cast<float>(id(mppt_length_of_night_minutes).state) + (60.0f * x);
+
+number:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    name: "MPPT Low Voltage Reconnect Set"
+    id: mppt_lvr_set
+    address: 0x900A
+    value_type: U_WORD
+    multiply: 0.01
+
+script:
+  - id: force_mppt_reconnect
+    then:
+      - logger.log: "Wechselrichter zieht Strom - zwinge EPEver Tracer per BVR-Kick in den Boost-Modus"
+      # Verwendet jetzt die 'number'-Entität 'mppt_lvr_set' statt des Sensors
+      - number.set:
+          id: mppt_lvr_set
+          value: 27.0
+      - delay: 3s
+      - number.set:
+          id: mppt_lvr_set
+          value: 26.7
