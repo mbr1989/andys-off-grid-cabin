@@ -109,25 +109,25 @@ number:
 # ----------------------------------------------------------------------
 
 interval:
-  - interval: 5s
+  - interval: 10s
     then:
-      lambda: |-
-      if (id(jkbms_soc).has_state()) {
-        float soc = id(jkbms_soc).state;
-        float cutoff = id(fridge_cutoff_soc);
-        float restore = id(fridge_restore_soc);
+      - lambda: |-
+          if (id(jkbms_battery_soc).has_state()) {
+            float soc = id(jkbms_battery_soc).state;
+            float cutoff = id(fridge_cutoff_soc);
+            float restore = id(fridge_restore_soc);
 
-        // Abschalten bei Unterschreiten des Cutoff-SoC
-        if (soc < cutoff && !id(victron_is_off)) {
-          ESP_LOGI("custom_logic", "SoC unter Cutoff (%.0f%%) - Victron deaktiviert", cutoff);
-          id(victron_is_off) = true;
-        } 
-        // Einschalten bei Erreichen des Restore-SoC
-        else if (soc >= restore && id(victron_is_off)) {
-          ESP_LOGI("custom_logic", "SoC ausreichend (>= %.0f%%) - Victron freigegeben", restore);
-          id(victron_is_off) = false;
-        }
-      }
+            // Abschalten bei Unterschreiten des Cutoff-SoC
+            if (soc < cutoff && !id(victron_is_off)) {
+              ESP_LOGI("fridge_ctrl", "SoC unter Cutoff (%.0f%%) - Victron deaktiviert", cutoff);
+              id(victron_is_off) = true;
+            } 
+            // Einschalten bei Erreichen des Restore-SoC
+            else if (soc >= restore && id(victron_is_off)) {
+              ESP_LOGI("fridge_ctrl", "SoC ausreichend (>= %.0f%%) - Victron freigegeben", restore);
+              id(victron_is_off) = false;
+            }
+          }
     startup_delay: 0s
     
 # ----------------------------------------------------------------------
