@@ -16,6 +16,7 @@ sensor:
       name: "Victron Phoenix AC OUT Current"
     ac_out_apparent_power:
       name: "Victron Phoenix AC OUT Apparent Power"
+      id: victron_ac_out_apparent_power
     warning_code:
       name: "Victron Phoenix Warning Code"
       id: victron_warning_code
