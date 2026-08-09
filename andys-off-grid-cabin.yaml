@@ -30,6 +30,11 @@ api:
   encryption:
     key: !secret andys_off_grid_cabin__encryption_key
 
+globals:
+  - id: victron_is_off
+    type: bool
+    initial_value: 'false'
+
 packages:
   display: !include packages/display.yaml
   external_components: !include packages/external-components.yaml
