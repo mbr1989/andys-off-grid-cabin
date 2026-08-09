@@ -94,7 +94,7 @@ number:
     step: 5
  
 # ----------------------------------------------------------------------
-# EPEver Modbus Settings: SOC Management & Charging Percentage
+# Fridge SoC control
 # ----------------------------------------------------------------------
 
 interval:
