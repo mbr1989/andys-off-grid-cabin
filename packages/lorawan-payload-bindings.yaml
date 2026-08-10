@@ -13,7 +13,7 @@ sensor:
   # 3. Battery SOC
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: jkbms_battery_soc     
+    sensor: jkbms_soc     
 
   # 4. HeatCurrent   
   - platform: lorawan

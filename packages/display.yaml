@@ -37,7 +37,7 @@ display:
           it.printf(128, 17, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", pv_pwr);
 
           // 2. Akku Netto-Leistung (jk-bms.yaml)
-          float bms_pwr = !isnan(id(jkbms_power).state) ? id(jkbms_power).state : 0.0;
+          float bms_pwr = !isnan(id(jkbms_power)) ? id(jkbms_power) : 0.0;
           it.printf(0, 28, id(font_small), "Akku Netto:");
           it.printf(128, 28, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", bms_pwr);
 

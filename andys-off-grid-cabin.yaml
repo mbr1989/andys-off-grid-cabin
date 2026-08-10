@@ -119,8 +119,8 @@ interval:
   - interval: 10s
     then:
       - lambda: |-
-          if (id(jkbms_battery_soc).has_state()) {
-            float soc = id(jkbms_battery_soc).state;
+          if (id(jkbms_soc).has_state()) {
+            float soc = id(jkbms_soc).state;
             float cutoff = id(fridge_cutoff_soc);
             float restore = id(fridge_restore_soc);
 
