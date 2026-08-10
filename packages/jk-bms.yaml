@@ -1341,6 +1341,7 @@ sensor:
   # 0x12CC   204   UINT16    2    R    TimeUVPR        S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_uvpr_left
     name: "uVPR left"
     address: 0x12CC
     register_type: holding
@@ -1355,6 +1356,7 @@ sensor:
   # 0x12CE   206   UINT16    2    R    TimeOVPR        S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_ovpr_left
     name: "oVPR left"
     address: 0x12CE
     register_type: holding
@@ -1396,6 +1398,7 @@ sensor:
   # 0x12F8   248   INT16     2    R    TempBat 3       0.1℃
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_bat_temp3
     name: "temperature sensor 3"
     address: 0x12F8
     register_type: holding
@@ -1412,6 +1415,7 @@ sensor:
   # 0x12FA   248   INT16     2    R    TempBat 4       0.1℃
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_bat_temp4
     name: "temperature sensor 4"
     address: 0x12FA
     register_type: holding
@@ -1428,7 +1432,7 @@ sensor:
   # 0x12FC   248   INT16     2    R    TempBat 5       0.1℃
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
-    id: jkbms_bat_temp4
+    id: jkbms_bat_temp5
     name: "temperature sensor 5"
     address: 0x12FC
     register_type: holding
