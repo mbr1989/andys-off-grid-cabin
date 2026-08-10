@@ -1447,6 +1447,7 @@ sensor:
   # 0x1504   260 UINT8+UINT8 2    RW    RCV Time / RFV Time 0.1 H
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_rcv_time
     name: "rCV Time"
     address: 0x1504
     register_type: holding
@@ -1463,6 +1464,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_rfv_time
     name: "rFV Time"
     address: 0x1504
     register_type: holding
