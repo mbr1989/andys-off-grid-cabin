@@ -262,6 +262,7 @@ sensor:
 
   # 0x1034 52  UINT32 4 RW    TIMBatCOCPRDly   S
   - platform: modbus_controller
+    id: jkbms_charge_ocpr_time
     modbus_controller_id: modbus_ctl_jkbms
     name: "charge OCPR time"
     address: 0x1034
@@ -278,6 +279,7 @@ sensor:
   # 0x1038 56  UINT32 4 RW    CurBatDcOC       mA
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_continued_discharge_current
     name: "continued discharge current"
     address: 0x1038
     register_type: holding
@@ -295,6 +297,7 @@ sensor:
   # 0x103C 60  UINT32 4 RW    TIMBatDcOCPDly   S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_discharge_ocp_delay
     name: "discharge OCP delay"
     address: 0x103C
     register_type: holding

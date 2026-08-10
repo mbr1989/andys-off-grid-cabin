@@ -4,13 +4,11 @@ spi:
     mosi_pin: GPIO11
     miso_pin: GPIO02
 
-# Globale Variable zur Verfolgung des SD-Karten-Status
 globals:
   - id: sd_card_mounted
     type: bool
     initial_value: 'false'
 
-# Initialisierung der SD-Karte beim Start
 esphome:
   on_boot:
     priority: -100.0
@@ -19,9 +17,8 @@ esphome:
           #include "SD.h"
           #include "SPI.h"
           
-          // Nutze den definierten SPI-Bus für die SD-Karte
-          SPIClass sd_spi_bus(FSPI); // Verwende FSPI/HSPI Hardware-Bus
-          sd_spi_bus.begin(14, 2, 11, 13); // SCK=14, MISO=2, MOSI=11, SS/CS=13
+          SPIClass sd_spi_bus(FSPI);
+          sd_spi_bus.begin(14, 2, 11, 13);
           
           if (SD.begin(13, sd_spi_bus)) {
             id(sd_card_mounted) = true;
@@ -33,63 +30,7 @@ esphome:
 
 interval:
   # -------------------------------------------------------------
-  # 1. JK-BMS Logging (Intervall: alle 10 Sekunden)
-  # -------------------------------------------------------------
-  - interval: 10s
-    then:
-      - lambda: |-
-          if (id(sd_card_mounted)) {
-            FILE *f = fopen("/sdcard/jk_bms.csv", "a");
-            if (f != nullptr) {
-              fseek(f, 0, SEEK_END);
-              if (ftell(f) == 0) {
-                fputs("Timestamp_ms;SOC;Total_Voltage;Current;Delta_Cell_Voltage;Power;Capacity_Remaining\n", f);
-              }
-
-              float soc  = id(jk_bms_state_of_charge).has_state() ? id(jk_bms_state_of_charge).state : 0.0;
-              float v    = id(jk_bms_total_voltage).has_state() ? id(jk_bms_total_voltage).state : 0.0;
-              float a    = id(jk_bms_current).has_state() ? id(jk_bms_current).state : 0.0;
-              float dev  = id(jk_bms_delta_cell_voltage).has_state() ? id(jk_bms_delta_cell_voltage).state : 0.0;
-              float p    = id(jk_bms_power).has_state() ? id(jk_bms_power).state : 0.0;
-              float cap  = id(jk_bms_capacity_remaining).has_state() ? id(jk_bms_capacity_remaining).state : 0.0;
-
-              fprintf(f, "%lu;%.1f;%.2f;%.2f;%.3f;%.1f;%.2f\n",
-                      millis(), soc, v, a, dev, p, cap);
-
-              fclose(f);
-            }
-          }
-
-  # -------------------------------------------------------------
-  # 2. EPever Tracer MPPT Logging (Intervall: alle 30 Sekunden)
-  # -------------------------------------------------------------
-  - interval: 30s
-    then:
-      - lambda: |-
-          if (id(sd_card_mounted)) {
-            FILE *f = fopen("/sdcard/tracer.csv", "a");
-            if (f != nullptr) {
-              fseek(f, 0, SEEK_END);
-              if (ftell(f) == 0) {
-                fputs("Timestamp_ms;PV_Voltage;PV_Current;PV_Power;Battery_Voltage;Charging_Current;Charging_Power\n", f);
-              }
-
-              float pv_v  = id(mppt_pv_voltage).has_state() ? id(mppt_pv_voltage).state : 0.0;
-              float pv_a  = id(mppt_pv_current).has_state() ? id(mppt_pv_current).state : 0.0;
-              float pv_w  = id(mppt_pv_power).has_state() ? id(mppt_pv_power).state : 0.0;
-              float bat_v = id(mppt_battery_voltage).has_state() ? id(mppt_battery_voltage).state : 0.0;
-              float chg_a = id(mppt_charging_current).has_state() ? id(mppt_charging_current).state : 0.0;
-              float chg_w = id(mppt_charging_power).has_state() ? id(mppt_charging_power).state : 0.0;
-
-              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.2f;%.1f\n",
-                      millis(), pv_v, pv_a, pv_w, bat_v, chg_a, chg_w);
-
-              fclose(f);
-            }
-          }
-
-  # -------------------------------------------------------------
-  # 3. EPever IP-Plus Wechselrichter Logging (Intervall: alle 10 Sekunden)
+  # 1. EPever IP-Plus Wechselrichter Logging (alle 10s)
   # -------------------------------------------------------------
   - interval: 10s
     then:
@@ -115,7 +56,36 @@ interval:
           }
 
   # -------------------------------------------------------------
-  # 4. Victron VE.Direct Logging (Intervall: alle 30 Sekunden)
+  # 2. EPever Tracer MPPT Logging (alle 30s)
+  # -------------------------------------------------------------
+  - interval: 30s
+    then:
+      - lambda: |-
+          if (id(sd_card_mounted)) {
+            FILE *f = fopen("/sdcard/tracer.csv", "a");
+            if (f != nullptr) {
+              fseek(f, 0, SEEK_END);
+              if (ftell(f) == 0) {
+                fputs("Timestamp_ms;PV_Voltage;PV_Current;PV_Power;Battery_Voltage;Charging_Current;Charging_Power\n", f);
+              }
+
+              float pv_v  = id(pv_array_input_voltage).has_state() ? id(pv_array_input_voltage).state : 0.0;
+              float pv_a  = id(pv_array_input_current).has_state() ? id(pv_array_input_current).state : 0.0;
+              float pv_w  = id(pv_array_input_power).has_state() ? id(pv_array_input_power).state : 0.0;
+              float bat_v = id(charging_equipment_output_voltage).has_state() ? id(charging_equipment_output_voltage).state : 0.0;
+              float chg_a = id(charging_equipment_output_current).has_state() ? id(charging_equipment_output_current).state : 0.0;
+              float chg_w = id(charging_equipment_output_power).has_state() ? id(charging_equipment_output_power).state : 0.0;
+
+              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.2f;%.1f\n",
+                      millis(), pv_v, pv_a, pv_w, bat_v, chg_a, chg_w);
+
+              fclose(f);
+            }
+          }
+
+  # -------------------------------------------------------------
+  # 3. Victron VE.Direct Logging (alle 30s)
+  # Dynamic DC/AC Inverter Logging
   # -------------------------------------------------------------
   - interval: 30s
     then:
@@ -125,16 +95,17 @@ interval:
             if (f != nullptr) {
               fseek(f, 0, SEEK_END);
               if (ftell(f) == 0) {
-                fputs("Timestamp_ms;Panel_Power;Panel_Voltage;Battery_Voltage;Battery_Current\n", f);
+                fputs("Timestamp_ms;Battery_Voltage;Battery_Current;AC_Output_Voltage;AC_Output_Current;AC_Apparent_Power\n", f);
               }
 
-              float p_w   = id(victron_panel_power).has_state() ? id(victron_panel_power).state : 0.0;
-              float p_v   = id(victron_panel_voltage).has_state() ? id(victron_panel_voltage).state : 0.0;
               float bat_v = id(victron_battery_voltage).has_state() ? id(victron_battery_voltage).state : 0.0;
               float bat_a = id(victron_battery_current).has_state() ? id(victron_battery_current).state : 0.0;
+              float ac_v  = id(victron_ac_out_voltage).has_state() ? id(victron_ac_out_voltage).state : 0.0;
+              float ac_a  = id(victron_ac_out_current).has_state() ? id(victron_ac_out_current).state : 0.0;
+              float ac_s  = id(victron_ac_out_apparent_power).has_state() ? id(victron_ac_out_apparent_power).state : 0.0;
 
-              fprintf(f, "%lu;%.1f;%.2f;%.2f;%.2f\n",
-                      millis(), p_w, p_v, bat_v, bat_a);
+              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.1f\n",
+                      millis(), bat_v, bat_a, ac_v, ac_a, ac_s);
 
               fclose(f);
             }
