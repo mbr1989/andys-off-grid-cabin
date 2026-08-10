@@ -7,7 +7,7 @@ sensor:
       id: victron_battery_voltage
     battery_current:
       name: "Victron Phoenix Battery Current"
-      id: victron_battery_current"
+      id: victron_battery_current
     charging_mode_id:
       name: "Victron Phoenix Charging Node ID"
       id: victron_charging_node_id
@@ -19,7 +19,7 @@ sensor:
       id: victron_ac_out_voltage
     ac_out_current:
       name: "Victron Phoenix AC OUT Current"
-      id: victron_ac_out_current"
+      id: victron_ac_out_current
     ac_out_apparent_power:
       name: "Victron Phoenix AC OUT Apparent Power"
       id: victron_ac_out_apparent_power
