@@ -13,12 +13,12 @@ sensor:
   # 3. Battery SOC
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: jkbms_soc     
+    sensor: jkbms_batt_soc    
 
   # 4. HeatCurrent   
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: jkbms_heating_current
+    sensor: jkbms_curr_batt_heating
 
   # 5. Einbrucherkennung
   - platform: lorawan
@@ -28,7 +28,7 @@ sensor:
   # 6. JK-BMS AlarmBitmask  
   - platform: lorawan
     lorawan_id: my_lorawan
-    sensor: jkbms_alarms_bitmask  
+    sensor: jkbms_bitmsk_alarms  
 
   # 7. MPPT Charging Equipment Status (0x3201)
   - platform: lorawan

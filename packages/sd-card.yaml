@@ -43,9 +43,9 @@ interval:
                 fputs("Timestamp_ms;DC_Input_Volt;AC_Output_Volt;AC_Active_Power;Equipment_Status\n", f);
               }
 
-              float dc_v = id(ip_plus_dc_input_voltage).has_state() ? id(ip_plus_dc_input_voltage).state : 0.0;
-              float ac_v = id(ip_plus_ac_output_voltage).has_state() ? id(ip_plus_ac_output_voltage).state : 0.0;
-              float ac_p = id(ip_plus_ac_output_active_power).has_state() ? id(ip_plus_ac_output_active_power).state : 0.0;
+              float dc_v = id(ip_plus_input_voltage).has_state() ? id(ip_plus_dc_input_voltage).state : 0.0;
+              float ac_v = id(ip_plus_output_voltage).has_state() ? id(ip_plus_ac_output_voltage).state : 0.0;
+              float ac_p = id(ip_plus_output_active_power).has_state() ? id(ip_plus_ac_output_active_power).state : 0.0;
               float st   = id(ip_plus_equipment_status).has_state() ? id(ip_plus_equipment_status).state : 0.0;
 
               fprintf(f, "%lu;%.2f;%.1f;%.1f;%.0f\n",
