@@ -149,7 +149,7 @@ interval:
 
               # 2. Entladestrom am JK-BMS prüfen (Strom ist negativ beim Entladen, z. B. < -2.0 A)
               - lambda: !lambda |-
-                  return !isnan(id(current).state) && id(current).state < -2.0;
+                  return !isnan(id(jkbms_current).state) && id(jkbms_current).state < -2.0;
 
               # 3. Ladestrom am EPEver prüfen (EPEver hängt fest bei < 0.5 A)
               - lambda: !lambda |-
