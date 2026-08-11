@@ -5,12 +5,6 @@ sensor:
     battery_voltage:
       name: "Victron Phoenix Battery Voltage"
       id: victron_battery_voltage
-    battery_current:
-      name: "Victron Phoenix Battery Current"
-      id: victron_battery_current
-    charging_mode_id:
-      name: "Victron Phoenix Charging Node ID"
-      id: victron_charging_node_id
     device_mode_id:
       name: "Victron Phoenix Device Mode ID"
       id: victron_device_mode_id
@@ -35,9 +29,6 @@ text_sensor:
     victron_id: victron_phoenix
     alarm_reason:
       name: "Victron Phoenix Alarm Reason"
-    # TODO: "OR"
-    charging_mode:
-      name: "Victron Phoenix Charging Mode"
     firmware_version:
       name: "Victron Phoenix Firmware Version"
     device_type:
