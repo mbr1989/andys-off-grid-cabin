@@ -1,9 +1,6 @@
 # Board: LilyGo T3-S3
 # Definition: definitions/boards/lilygo-t3-s3/manifest.yaml
 
-substitutions:
-  bms_control_params_skip_updates: "20"   # 20 - update every 20th update cycle
-
 esphome:
   name: andys-off-grid-cabin
   friendly_name: "Andy's Off-Grid Cabin"
