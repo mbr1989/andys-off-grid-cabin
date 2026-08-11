@@ -755,6 +755,7 @@ sensor:
   # 0x1244   68    UINT16    2    R    CellVolAverage    mV
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_average_cell_voltage
     name: "average cell voltage"
     address: 0x1244
     register_type: holding
@@ -771,6 +772,7 @@ sensor:
   # 0x1246   70    UINT16    2    R    CellVoltageDifferenceMax    mV
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_delta_cell_voltage
     name: "delta cell voltage"
     address: 0x1246
     register_type: holding
@@ -787,6 +789,7 @@ sensor:
   # 0x124A   74    UINT16    2    R    CellWireRes0    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_1_wire_resistance
     name: "cell 1 wire resistance"
     address: 0x124A
     register_type: holding
@@ -802,6 +805,7 @@ sensor:
   # 0x124C   76    UINT16    2    R    CellWireRes1    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_2_wire_resistance
     name: "cell 2 wire resistance"
     address: 0x124C
     register_type: holding
@@ -817,6 +821,7 @@ sensor:
   # 0x124E   78    UINT16    2    R    CellWireRes2    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_3_wire_resistance
     name: "cell 3 wire resistance"
     address: 0x124E
     register_type: holding
@@ -832,6 +837,7 @@ sensor:
   # 0x1250   80    UINT16    2    R    CellWireRes3    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_4_wire_resistance
     name: "cell 4 wire resistance"
     address: 0x1250
     register_type: holding
@@ -847,6 +853,7 @@ sensor:
   # 0x1252   82    UINT16    2    R    CellWireRes4    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_5_wire_resistance
     name: "cell 5 wire resistance"
     address: 0x1252
     register_type: holding
@@ -862,6 +869,7 @@ sensor:
   # 0x1254   84    UINT16    2    R    CellWireRes5    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_6_wire_resistance
     name: "cell 6 wire resistance"
     address: 0x1254
     register_type: holding
@@ -877,6 +885,7 @@ sensor:
   # 0x1256   86    UINT16    2    R    CellWireRes6    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_7_wire_resistance
     name: "cell 7 wire resistance"
     address: 0x1256
     register_type: holding
@@ -892,23 +901,9 @@ sensor:
   # 0x1258   88    UINT16    2    R    CellWireRes7    mΩ
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_cell_8_wire_resistance
     name: "cell 8 wire resistance"
     address: 0x1258
-    register_type: holding
-    value_type: U_WORD
-    register_count: 2
-    response_size: 2
-    unit_of_measurement: "Ω"
-    state_class: measurement
-    accuracy_decimals: 3
-    filters:
-      - multiply: 0.001
-
-  # 0x125A   90    UINT16    2    R    CellWireRes8    mΩ
-  - platform: modbus_controller
-    modbus_controller_id: modbus_ctl_jkbms
-    name: "cell 9 wire resistance"
-    address: 0x125A
     register_type: holding
     value_type: U_WORD
     register_count: 2
@@ -922,6 +917,7 @@ sensor:
     # 0x128A   138    INT16    2    R    TempMos         0.1 °C
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_mosfet_temperature
     name: "mosfet temperature"
     address: 0x128A
     register_type: holding
@@ -939,7 +935,7 @@ sensor:
   # 0x1290   144   UINT32    4    R    BatVol          mV
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
-    id: total_voltage
+    id: jkbms_total_voltage
     name: "total voltage"
     address: 0x1290
     register_type: holding
@@ -1019,7 +1015,7 @@ sensor:
   # 0x1298   152    INT32    4    R    BatCurrent      mA
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
-    id: current
+    id: jkbms_current
     name: "current"
     address: 0x1298
     register_type: holding
@@ -1035,6 +1031,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_charging_current
     name: "charging current"
     address: 0x1298
     register_type: holding
@@ -1055,6 +1052,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_discharging_current
     name: "discharging current"
     address: 0x1298
     register_type: holding
@@ -1076,6 +1074,7 @@ sensor:
   # 0x129C   156    INT16    2    R    TempBat 1       0.1 °C
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_temperature_sensor_1
     name: "temperature sensor 1"
     address: 0x129C
     register_type: holding
@@ -1092,6 +1091,7 @@ sensor:
   # 0x129E   158    INT16    2    R    TempBat 2       0.1 °C
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_temperature_sensor_2
     name: "temperature sensor 2"
     address: 0x129E
     register_type: holding
@@ -1122,6 +1122,7 @@ sensor:
   # 0x12A4   164    INT16    2    R    BalanCurrent    mA
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_balance_current
     name: "balance current"
     address: 0x12A4
     register_type: holding
@@ -1151,7 +1152,7 @@ sensor:
 
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
-    id: balancing_raw
+    id: jkbms_balancing_raw
     address: 0x12A6
     register_type: holding
     value_type: U_WORD
@@ -1163,6 +1164,7 @@ sensor:
   # 0x12A8   168    INT32    2    R    SOCCapRemain    mAH
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_capacity_remaining
     name: "capacity remaining"
     address: 0x12A8
     register_type: holding
@@ -1179,6 +1181,7 @@ sensor:
   # 0x12AC   172   UINT32    4    R    SOCFullChargeCap    mAH
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: full_charge_capacity
     name: "full charge capacity"
     address: 0x12AC
     register_type: holding
@@ -1195,6 +1198,7 @@ sensor:
   # 0x12B0   176   UINT32    4    R    SOCCycleCount   次
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_charging_cycles
     name: "charging cycles"
     address: 0x12B0
     register_type: holding
@@ -1207,6 +1211,7 @@ sensor:
   # 0x12B4   180   UINT32    4    R    SOCCycleCap     mAH
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_total_charging_cycle_capacity
     name: "total charging cycle capacity"
     address: 0x12B4
     register_type: holding
@@ -1222,6 +1227,7 @@ sensor:
   # 0x12B8   184 UINT8+UINT8 2    R    StateOfHealth % / Precharge stats (1:打开 ; 0:关闭)
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_soh
     name: "state of health"
     address: 0x12B8
     register_type: holding
@@ -1239,6 +1245,7 @@ sensor:
   # 0x12BC   188   UINT32    4    R    RunTime         S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_total_runtime_seconds
     name: "total runtime in seconds"
     address: 0x12BC
     register_type: holding
@@ -1287,6 +1294,7 @@ sensor:
   # 0x12C4   196   UINT16    2    R    TimeDcOCPR      S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: disacharge_ocpr_left
     name: "disacharge OCPR left"
     address: 0x12C4
     register_type: holding
@@ -1301,6 +1309,7 @@ sensor:
   # 0x12C6   198   UINT16    2    R    TimeDcSCPR      S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_charge_ocpr_left
     name: "disacharge SCPR left"
     address: 0x12C6
     register_type: holding
@@ -1313,6 +1322,7 @@ sensor:
   # 0x12C8   200   UINT16    2    R    TimeCOCPR       S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_charge_ocpr_left
     name: "charge OCPR left"
     address: 0x12C8
     register_type: holding
@@ -1327,6 +1337,7 @@ sensor:
   # 0x12CA   202   UINT16    2    R    TimeCSCPR       S
   - platform: modbus_controller
     modbus_controller_id: modbus_ctl_jkbms
+    id: jkbms_charge_scpr_left
     name: "charge SCPR left"
     address: 0x12CA
     register_type: holding
