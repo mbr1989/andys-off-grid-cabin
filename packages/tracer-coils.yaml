@@ -1,0 +1,53 @@
+# packages/tracer-coils.yaml
+switch:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_charging_enable
+    name: "MPPT Charging Enable"
+    register_type: coil
+    address: 0
+    bitmask: 1
+    entity_category: config
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_output_control_mode
+    name: "MPPT Output Control Mode"
+    register_type: coil
+    address: 1
+    bitmask: 1
+    entity_category: config
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_manual_control_load
+    name: "MPPT Manual Control Load"
+    register_type: coil
+    address: 2
+    bitmask: 1
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_default_control_load
+    name: "MPPT Default Control Load"
+    register_type: coil
+    address: 3
+    bitmask: 1
+    entity_category: config
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_enable_load_test
+    name: "MPPT Enable Load Test Mode"
+    register_type: coil
+    address: 5
+    bitmask: 1
+    entity_category: config
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_tracer
+    id: mppt_force_load
+    name: "MPPT Force Load"
+    register_type: coil
+    address: 6
+    bitmask: 1
