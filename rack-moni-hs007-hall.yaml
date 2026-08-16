@@ -33,6 +33,7 @@ ethernet:
   mosi_pin: GPIO11
   reset_pin: GPIO9
   type: W5500
+  interface: spi2
 
 web_server:
   port: 80
