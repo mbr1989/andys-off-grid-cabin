@@ -53,7 +53,7 @@ packages:
   lorawan_payload_bindings: !include packages/lorawan-payload-bindings.yaml
   modbus_components: !include packages/modbus-components.yaml
   modbus_controllers: !include packages/modbus-controllers.yaml
-  tracer_coils: !include packages/mppt-tracer-coils.yaml
+  tracer_coils: !include packages/tracer-coils.yaml
   tracer_rated_datum: !include packages/tracer-rated-datum.yaml
   tracer_real_time: !include packages/tracer-real-time.yaml
   tracer_settings: !include packages/tracer-settings.yaml
