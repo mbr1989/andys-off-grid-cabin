@@ -10,22 +10,38 @@ globals:
     initial_value: 'false'
 
 esphome:
+  includes:
+    - text: |-
+        #include "esp_vfs_fat.h"
+        #include "driver/sdspi_host.h"
+        #include "sdmmc_cmd.h"
+
   on_boot:
     priority: -100.0
     then:
       - lambda: |-
-          #include "SD.h"
-          #include "SPI.h"
+          // SDSPI Host-Konfiguration fuer ESP-IDF
+          sdmmc_host_t host = SDSPI_HOST_DEFAULT();
           
-          SPIClass sd_spi_bus(FSPI);
-          sd_spi_bus.begin(14, 2, 11, 13);
-          
-          if (SD.begin(13, sd_spi_bus)) {
+          sdspi_device_config_t slot_config = SDSPI_DEVICE_CONFIG_DEFAULT();
+          slot_config.gpio_cs = GPIO_NUM_13;
+          slot_config.host_id = SPI2_HOST; // FSPI / SPI2 auf ESP32-S3
+
+          esp_vfs_fat_sdmmc_mount_config_t mount_config = {
+              .format_if_mount_failed = false,
+              .max_files = 5,
+              .allocation_unit_size = 16 * 1024
+          };
+
+          sdmmc_card_t *card;
+          esp_err_t ret = esp_vfs_fat_sdspi_mount("/sdcard", &host, &slot_config, &mount_config, &card);
+
+          if (ret == ESP_OK) {
             id(sd_card_mounted) = true;
-            ESP_LOGI("sd_card", "SD-Karte erfolgreich initialisiert!");
+            ESP_LOGI("sd_card", "SD-Karte erfolgreich gemountet unter /sdcard");
           } else {
             id(sd_card_mounted) = false;
-            ESP_LOGE("sd_card", "SD-Karte konnte nicht initialisiert werden!");
+            ESP_LOGE("sd_card", "SD-Karte Mount fehlgeschlagen! Fehlercode: 0x%x", ret);
           }
 
 interval:
@@ -40,16 +56,20 @@ interval:
             if (f != nullptr) {
               fseek(f, 0, SEEK_END);
               if (ftell(f) == 0) {
-                fputs("Timestamp_ms;DC_Input_Volt;AC_Output_Volt;AC_Active_Power;Equipment_Status\n", f);
+                fputs("Timestamp_ms;Input_Voltage;Input_Current;Input_Power;Output_Voltage;Output_Current;Output_Power;Device_Temp;Heatsink_Temp\n", f);
               }
 
-              float dc_v = id(ip_plus_input_voltage).has_state() ? id(ip_plus_dc_input_voltage).state : 0.0;
-              float ac_v = id(ip_plus_output_voltage).has_state() ? id(ip_plus_ac_output_voltage).state : 0.0;
-              float ac_p = id(ip_plus_output_active_power).has_state() ? id(ip_plus_ac_output_active_power).state : 0.0;
-              float st   = id(ip_plus_equipment_status).has_state() ? id(ip_plus_equipment_status).state : 0.0;
+              float input_v  = id(ip_plus_load_input_voltage).has_state() ? id(ip_plus_load_input_voltage).state : 0.0;
+              float input_a  = id(ip_plus_load_input_current).has_state() ? id(ip_plus_load_input_current).state : 0.0;
+              float input_w  = id(ip_plus_load_input_power).has_state() ? id(ip_plus_load_input_power).state : 0.0;
+              float output_v = id(ip_plus_output_voltage).has_state() ? id(ip_plus_output_voltage).state : 0.0;
+              float output_a = id(ip_plus_output_current).has_state() ? id(ip_plus_output_current).state : 0.0;
+              float output_w = id(ip_plus_output_power).has_state() ? id(ip_plus_output_power).state : 0.0;
+              float dev_temp = id(ip_plus_device_temp).has_state() ? id(ip_plus_device_temp).state : 0.0;
+              float sin_temp = id(ip_plus_heatsink_temp).has_state() ? id(ip_plus_heatsink_temp).state : 0.0;
 
-              fprintf(f, "%lu;%.2f;%.1f;%.1f;%.0f\n",
-                      millis(), dc_v, ac_v, ac_p, st);
+              fprintf(f, "%lu;%.2f;%.1f;%.1f;%.2f;%.1f;%.1f;%.1f;%.1f\n",
+                      millis(), input_v, input_a, input_w, output_v, output_a, output_w, dev_temp, sin_temp);
 
               fclose(f);
             }
@@ -62,22 +82,24 @@ interval:
     then:
       - lambda: |-
           if (id(sd_card_mounted)) {
-            FILE *f = fopen("/sdcard/tracer.csv", "a");
+            FILE *f = fopen("/sdcard/tracer_mppt.csv", "a");
             if (f != nullptr) {
               fseek(f, 0, SEEK_END);
               if (ftell(f) == 0) {
-                fputs("Timestamp_ms;PV_Voltage;PV_Current;PV_Power;Battery_Voltage;Charging_Current;Charging_Power\n", f);
+                fputs("Timestamp_ms;PV_Voltage;PV_Current;PV_Power;Bat_Voltage;Bat_Current;Bat_Power;Device_Temp;Heatsink_Temp\n", f);
               }
 
-              float pv_v  = id(pv_array_input_voltage).has_state() ? id(pv_array_input_voltage).state : 0.0;
-              float pv_a  = id(pv_array_input_current).has_state() ? id(pv_array_input_current).state : 0.0;
-              float pv_w  = id(pv_array_input_power).has_state() ? id(pv_array_input_power).state : 0.0;
-              float bat_v = id(charging_equipment_output_voltage).has_state() ? id(charging_equipment_output_voltage).state : 0.0;
-              float chg_a = id(charging_equipment_output_current).has_state() ? id(charging_equipment_output_current).state : 0.0;
-              float chg_w = id(charging_equipment_output_power).has_state() ? id(charging_equipment_output_power).state : 0.0;
+              float pv_v     = id(mppt_pv_input_voltage).has_state() ? id(mppt_pv_input_voltage).state : 0.0;
+              float pv_a     = id(mppt_pv_input_current).has_state() ? id(mppt_pv_input_current).state : 0.0;
+              float pv_w     = id(mppt_pv_input_power).has_state() ? id(mppt_pv_input_power).state : 0.0;
+              float bat_v    = id(mppt_charging_voltage).has_state() ? id(mppt_charging_voltage).state : 0.0;
+              float bat_a    = id(mppt_charging_current).has_state() ? id(mppt_charging_current).state : 0.0;
+              float bat_w    = id(mppt_charging_power).has_state() ? id(mppt_charging_power).state : 0.0;
+              float dev_temp = id(mppt_device_temperature).has_state() ? id(mppt_device_temperature).state : 0.0;
+              float hs_temp  = id(mppt_power_components_temperature).has_state() ? id(mppt_power_components_temperature).state : 0.0;
 
-              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.2f;%.1f\n",
-                      millis(), pv_v, pv_a, pv_w, bat_v, chg_a, chg_w);
+              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.2f;%.1f;%.1f;%.1f\n",
+                      millis(), pv_v, pv_a, pv_w, bat_v, bat_a, bat_w, dev_temp, hs_temp);
 
               fclose(f);
             }
@@ -85,7 +107,6 @@ interval:
 
   # -------------------------------------------------------------
   # 3. Victron VE.Direct Logging (alle 30s)
-  # Dynamic DC/AC Inverter Logging
   # -------------------------------------------------------------
   - interval: 30s
     then:
@@ -95,17 +116,16 @@ interval:
             if (f != nullptr) {
               fseek(f, 0, SEEK_END);
               if (ftell(f) == 0) {
-                fputs("Timestamp_ms;Battery_Voltage;Battery_Current;AC_Output_Voltage;AC_Output_Current;AC_Apparent_Power\n", f);
+                fputs("Timestamp_ms;Battery_Voltage;AC_Output_Voltage;AC_Output_Current;AC_Apparent_Power\n", f);
               }
 
               float bat_v = id(victron_battery_voltage).has_state() ? id(victron_battery_voltage).state : 0.0;
-              float bat_a = id(victron_battery_current).has_state() ? id(victron_battery_current).state : 0.0;
               float ac_v  = id(victron_ac_out_voltage).has_state() ? id(victron_ac_out_voltage).state : 0.0;
               float ac_a  = id(victron_ac_out_current).has_state() ? id(victron_ac_out_current).state : 0.0;
               float ac_s  = id(victron_ac_out_apparent_power).has_state() ? id(victron_ac_out_apparent_power).state : 0.0;
 
-              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f;%.1f\n",
-                      millis(), bat_v, bat_a, ac_v, ac_a, ac_s);
+              fprintf(f, "%lu;%.2f;%.2f;%.1f;%.2f\n",
+                      millis(), bat_v, ac_v, ac_a, ac_s);
 
               fclose(f);
             }
