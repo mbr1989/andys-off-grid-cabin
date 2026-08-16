@@ -40,14 +40,20 @@ web_server:
 
 esp32_camera:
   name: ESPcam
+  # Takt & Signal-Pins laut Waveshare ESP32-S3-ETH Pinout
   external_clock:
-    pin: GPIO15
-    frequency: 12MHz
-  # SCCB / I2C Pins
+    pin: GPIO03       # XCLK
+    frequency: 20MHz
+  pixel_clock_pin: GPIO39 # PCLK
+  vsync_pin: GPIO01
+  href_pin: GPIO02
+
+  # SCCB / I2C Bus für Steuerung
   i2c_pins:
-    sda: GPIO48       # Laut Tabelle: SIOD
-    scl: GPIO47       # Laut Tabelle: SIOC
-  # Parallel-Datenbus [D0, D1, D2, D3, D4, D5, D6, D7]
+    sda: GPIO48       # SIOD
+    scl: GPIO47       # SIOC
+
+  # 8-Bit Data Bus [D0, D1, D2, D3, D4, D5, D6, D7]
   data_pins:
     - GPIO41          # D0
     - GPIO45          # D1
@@ -57,14 +63,13 @@ esp32_camera:
     - GPIO38          # D5
     - GPIO15          # D6
     - GPIO18          # D7
-  vsync_pin: GPIO01
-  href_pin: GPIO02
-  pixel_clock_pin: GPIO26
-  # Power Management
+
   reset_pin: GPIO05
-  resolution: 1280x1024
-  jpeg_quality: 15
-  vertical_flip: False
+  
+  # Volle 5 MP Auflösung der OV5640
+  resolution: 2592x1944
+  jpeg_quality: 12     # Werte von 10 (hoch) bis 63 (niedrig)
+  vertical_flip: false
 
 esp32_camera_web_server:
   - port: 8080
