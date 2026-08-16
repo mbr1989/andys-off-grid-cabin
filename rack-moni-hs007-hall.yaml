@@ -3,7 +3,7 @@
 
 esphome:
   name: rack-moni-hs007-hall
-  friendly_name: rack-moni-hs007-hall
+  friendly_name: Rack Monitoring HS NL 007- Halle
 
 esp32:
   variant: esp32s3
