@@ -44,9 +44,9 @@ esp32_camera:
     pin: GPIO15
     frequency: 12MHz
   i2c_pins:
-    sda: GPIO22
-    scl: GPIO23
-  data_pins: [GPIO2, GPIO14, GPIO35, GPIO12, GPIO27, GPIO33, GPIO34, GPIO39]
+    sda: GPIO48
+    scl: GPIO47
+  data_pins: [GPIO41, GPIO45, GPIO46, GPIO42, GPIO40, GPIO38, GPIO15, GPIO18]
   vsync_pin: GPIO18
   href_pin: GPIO36
   pixel_clock_pin: GPIO26
