@@ -15,8 +15,7 @@ logger:
 
 api:
   encryption:
-    key: "CkfijiOqvpBJhkzRDyE+11PVuIVkFIa6QEGZphCrTnM="
-
+    key: !secret rack_moni_hs007_hall__encryption_key
 ota:
   - platform: web_server
 
