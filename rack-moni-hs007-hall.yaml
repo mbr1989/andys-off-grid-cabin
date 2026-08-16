@@ -46,9 +46,18 @@ esp32_camera:
   i2c_pins:
     sda: GPIO48
     scl: GPIO47
-  data_pins: [GPIO41, GPIO45, GPIO46, GPIO42, GPIO40, GPIO38, GPIO15, GPIO18]
-  vsync_pin: GPIO18
-  href_pin: GPIO36
+  # Parallel-Datenbus [D0, D1, D2, D3, D4, D5, D6, D7]
+  data_pins:
+    - GPIO41          # D0
+    - GPIO45          # D1
+    - GPIO46          # D2
+    - GPIO42          # D3
+    - GPIO40          # D4
+    - GPIO38          # D5
+    - GPIO15          # D6
+    - GPIO18          # D7
+  vsync_pin: GPIO01
+  href_pin: GPIO02
   pixel_clock_pin: GPIO26
   reset_pin: GPIO5
   resolution: 1280x1024
