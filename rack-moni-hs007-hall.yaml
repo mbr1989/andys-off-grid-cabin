@@ -108,4 +108,4 @@ binary_sensor:
     name: "Rack Door State"
     device_class: door
     sensor_id: ir_reflective_raw
-    threshold: 1.5V         # Wert nach Bedarf anpassen (z. B. 1.2V oder 1.8V)
+    threshold: 1.5         # Ohne "V" eintragen!
