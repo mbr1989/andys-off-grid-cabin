@@ -82,14 +82,30 @@ esp32_camera_web_server:
     mode: snapshot
 
 sensor:
- - platform: dht
-   pin:
-     number: GPIO04
-   temperature:
-     name: Rack Temperature
-     icon: "mdi:temperature-celsius"
-   humidity:
-     name: Rack Humidity
-     icon: "mdi:water-percent"
-   update_interval: 60s
-   model: DHT22
+  # 1. DHT22 Sensor
+  - platform: dht
+    pin: GPIO04
+    model: DHT22
+    temperature:
+      name: Rack Temperature
+      icon: "mdi:temperature-celsius"
+    humidity:
+      name: Rack Humidity
+      icon: "mdi:water-percent"
+    update_interval: 60s
+
+  # 2. IR-Reflexionssensor (AOUT via ADC)
+  - platform: adc
+    pin: GPIO06             # AOUT an GPIO06 angeschlossen
+    id: ir_reflective_raw
+    name: "IR Sensor Raw Voltage"
+    update_interval: 500ms
+    attenuation: 12db       # Voller Messbereich (0V bis 3.3V)
+
+# Schaltschwelle für den IR-Sensor
+binary_sensor:
+  - platform: analog_threshold
+    name: "Rack Door State"
+    device_class: door
+    sensor_id: ir_reflective_raw
+    threshold: 1.5V         # Wert nach Bedarf anpassen (z. B. 1.2V oder 1.8V)
