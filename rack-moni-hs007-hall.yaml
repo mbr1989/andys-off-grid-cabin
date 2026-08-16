@@ -83,7 +83,8 @@ esp32_camera_web_server:
 
 sensor:
  - platform: dht
-   pin: GPIO04
+   pin:
+     number: GPIO04
    temperature:
      name: Rack Temperature
      icon: "mdi:temperature-celsius"
