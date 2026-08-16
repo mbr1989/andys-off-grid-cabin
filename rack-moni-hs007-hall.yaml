@@ -11,6 +11,10 @@ esp32:
   framework:
     type: esp-idf
 
+# PSRAM in ESPHome aktivieren
+psram:
+  mode: octal
+
 logger:
 
 api:
