@@ -98,7 +98,7 @@ sensor:
   - platform: adc
     pin: GPIO06             # AOUT an GPIO06 angeschlossen
     id: ir_reflective_raw
-    name: "IRSensorRawVoltage"
+    name: IRSensorRawVoltage
     update_interval: 500ms
     attenuation: 12db       # Voller Messbereich (0V bis 3.3V)
 
