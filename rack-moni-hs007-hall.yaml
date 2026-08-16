@@ -37,3 +37,15 @@ web_server:
     password: !secret rack_moni_hs007_hall__web_password
     username: admin
     type: digest
+
+sensor:
+ - platform: dht
+   pin:
+   temperature:
+     name: Rack Temperature
+     icon: "mdi:temperature-celsius"
+   humidity:
+     name: Rack Humidity
+     icon: "mdi:water-percent"
+   update_interval: 60s
+   model: DHT22
