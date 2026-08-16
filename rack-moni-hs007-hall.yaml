@@ -67,7 +67,7 @@ esp32_camera:
   reset_pin: GPIO05
   
   # Volle 5 MP Auflösung der OV5640
-  resolution: 2592x1944
+  resolution: 2048x1536
   jpeg_quality: 12     # Werte von 10 (hoch) bis 63 (niedrig)
   vertical_flip: false
 
