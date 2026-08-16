@@ -105,7 +105,8 @@ sensor:
 # Schaltschwelle für den IR-Sensor
 binary_sensor:
   - platform: analog_threshold
-    name: "Rack Door State"
+    name: RackDoorState
     device_class: door
     sensor_id: ir_reflective_raw
     threshold: 1.5         # Ohne "V" eintragen!
+    icon: "mdi:server"
