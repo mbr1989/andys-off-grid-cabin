@@ -1,0 +1,31 @@
+# Board: Waveshare ESP32-S3-ETH (Waveshare)
+# Definition: definitions/boards/waveshare-esp32-s3-eth/manifest.yaml
+
+esphome:
+  name: rack-moni-hs007-hall
+  friendly_name: rack-moni-hs007-hall
+
+esp32:
+  variant: esp32s3
+  flash_size: 16MB
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+  encryption:
+    key: "CkfijiOqvpBJhkzRDyE+11PVuIVkFIa6QEGZphCrTnM="
+
+ota:
+  - platform: esphome
+
+ethernet:
+  clk_pin: GPIO13
+  clock_speed: 25MHz
+  cs_pin: GPIO14
+  interrupt_pin: GPIO10
+  miso_pin: GPIO12
+  mosi_pin: GPIO11
+  reset_pin: GPIO9
+  type: W5500
