@@ -61,7 +61,7 @@ packages:
   uarts: !include packages/uarts.yaml
   victron: !include packages/victron.yaml
   wifi: !include packages/wifi.yaml
-  #sd_card: !include packages/sd-card.yaml
+  sd_card: !include packages/sd-card.yaml
   
 # ----------------------------------------------------------------------
 # Sensors & Devices
