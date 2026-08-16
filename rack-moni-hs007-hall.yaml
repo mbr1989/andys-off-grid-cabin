@@ -67,7 +67,6 @@ esp32_camera:
     - GPIO38          # D5
     - GPIO15          # D6
     - GPIO18          # D7
-
   reset_pin: GPIO05
   
   # Volle 5 MP Auflösung der OV5640
