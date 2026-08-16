@@ -29,3 +29,10 @@ ethernet:
   mosi_pin: GPIO11
   reset_pin: GPIO9
   type: W5500
+
+web_server:
+  version: 3
+  auth:
+    password: !secret rack_moni_hs007_hall__web_password
+    username: admin
+    type: digest
