@@ -6,10 +6,10 @@
 font:
   - file: "gfonts://Roboto"
     id: font_small
-    size: 10
+    size: 12
   - file: "gfonts://Roboto"
     id: font_large
-    size: 14
+    size: 13
 
 i2c:
   - id: i2c_1
@@ -49,7 +49,7 @@ display:
           // 4. Victron Phoenix Inverter (Embraco EMD20CLT Korrektur: cos phi ~ 0.90)
           float vic_va = !isnan(id(victron_ac_out_apparent_power).state) ? id(victron_ac_out_apparent_power).state : 0.0;
           float vic_pwr = (vic_va >= 18.0f) ? (vic_va * 0.90f) : 0.0f;
-          it.printf(0, 50, id(font_small), "Kühlschrank");
+          it.printf(0, 50, id(font_small), "Kuehlschrank");
           it.printf(128, 50, id(font_small), TextAlign::TOP_RIGHT, "%.0f W", vic_pwr);
 
       # ----------------------------------------------------------------
