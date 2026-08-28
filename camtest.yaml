@@ -54,6 +54,8 @@ i2c:
   - id: camera_sccb
     sda: GPIO48       # SIOD
     scl: GPIO47       # SIOC
+    frequency: 50kHz  # Frequenz absenken für maximale Fehlertoleranz beim Booten
+    scan: true        # Zwingt ESPHome, den Bus-Scan explizit ins Log zu drucken
     
 esp32_camera:
   name: ESPcam
