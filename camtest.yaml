@@ -2,7 +2,7 @@
 # Definition: definitions/boards/waveshare-esp32-s3-eth/manifest.yaml
 
 esphome:
-  name: camtest
+  name: cam-test
   friendly_name: CamTest
 
 esp32:
@@ -11,14 +11,24 @@ esp32:
   framework:
     type: esp-idf
 
+# PSRAM in ESPHome aktivieren
+psram:
+  mode: octal
+  speed: 80MHZ
+  enable_ecc: false
+
 logger:
+  hardware_uart: USB_SERIAL_JTAG
+  # Nutzt den internen S3 USB-Port anstelle von UART0
+  level: DEBUG
 
 api:
   encryption:
-    key: "36RO7uQR3Plv9Z25ShAjEEn+0reK7LnqF5n8GGp4HKk="
+    key: !secret rack_moni_hs007_hall__encryption_key
 
 ota:
   - platform: esphome
+    version: 2
 
 ethernet:
   clk_pin: GPIO13
@@ -29,3 +39,54 @@ ethernet:
   mosi_pin: GPIO11
   reset_pin: GPIO9
   type: W5500
+  interface: spi2
+
+web_server:
+  port: 80
+  version: 3
+  auth:
+    password: !secret rack_moni_hs007_hall__web_password
+    username: admin
+    type: digest
+
+  # SCCB / I2C Bus für Steuerung
+i2c:
+  - id: camera_sccb
+    sda: GPIO48       # SIOD
+    scl: GPIO47       # SIOC
+    
+esp32_camera:
+  name: ESPcam
+  # Takt & Signal-Pins laut Waveshare ESP32-S3-ETH Pinout
+  external_clock:
+    pin: GPIO03       # XCLK
+    frequency: 20MHz
+  pixel_clock_pin: GPIO39 # PCLK
+  vsync_pin: GPIO01
+  href_pin: GPIO02
+
+  # SCCB / I2C Bus für Steuerung
+  i2c_id: camera_sccb
+
+  # 8-Bit Data Bus [D0, D1, D2, D3, D4, D5, D6, D7]
+  data_pins:
+    - GPIO41          # D0
+    - GPIO45          # D1
+    - GPIO46          # D2
+    - GPIO42          # D3
+    - GPIO40          # D4
+    - GPIO38          # D5
+    - GPIO15          # D6
+    - GPIO18          # D7
+  
+  # Volle 5 MP Auflösung der OV5640
+  resolution: 800x600
+  #resolution: 2048x1536
+  jpeg_quality: 10
+  vertical_flip: false
+
+esp32_camera_web_server:
+  - port: 8080
+    mode: stream
+  - port: 8081
+    mode: snapshot
