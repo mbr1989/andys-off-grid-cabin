@@ -80,10 +80,11 @@ esp32_camera:
     - GPIO38          # D5
     - GPIO15          # D6
     - GPIO18          # D7
+      
+  frame_buffer_location: PSRAM
   
   # Volle 5 MP Auflösung der OV5640
   resolution: 800x600
-  #resolution: 2048x1536
   jpeg_quality: 10
   vertical_flip: false
 
