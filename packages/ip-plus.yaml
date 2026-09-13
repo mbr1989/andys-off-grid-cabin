@@ -153,11 +153,24 @@ switch:
     address: 0x0F
     register_type: coil
 
+# 1. Unsichtbare / Hilfs-Nummer als Modbus-Register anlegen
+number:
+  - platform: modbus_controller
+    modbus_controller_id: modbus_ctl_epever_ip_plus
+    id: ip_plus_clear_faults_register
+    name: "IP Plus Clear Faults Register"
+    address: 0x0001
+    value_type: U_WORD
+    internal: true
+
+# 2. Button, der den Wert 1 in das Register schreibt
 button:
   - platform: template
     id: ip_plus_clear_faults
     name: "IP Plus Clear Faults"
     icon: "mdi:alert-remove"
     on_press:
-      - lambda: |-
-          id(modbus_ctl_epever_ip_plus)->send(0x06, 0x0001, 0x0001);
+      then:
+        - number.set:
+            id: ip_plus_clear_faults_register
+            value: 1
