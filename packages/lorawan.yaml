@@ -4,6 +4,7 @@
 lorawan:
   id: my_lorawan
   region: EU868
+  sub_band: 0
   uplink_interval: 15min
   radio:
    chip: sx1262
