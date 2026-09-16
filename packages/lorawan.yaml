@@ -9,7 +9,8 @@ lorawan:
    chip: sx1262
    cs_pin: GPIO7
    rst_pin: GPIO8
-   dio0_pin: GPIO33
+   busy_pin: GPIO34
+   dio1_pin: GPIO33
    sck_pin: GPIO5
    miso_pin:
      number: GPIO3
