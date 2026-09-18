@@ -14,6 +14,7 @@ esp32:
 logger:
   hardware_uart: USB_SERIAL_JTAG
   # Nutzt den internen S3 USB-Port anstelle von UART0
+  level: VERY_VERBOSE
 
 web_server:
   port: 80
