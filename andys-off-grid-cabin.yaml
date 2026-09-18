@@ -234,3 +234,6 @@ script:
           id(ip_plus_output_enable).turn_off();
           id(ip_plus_remote_mode).turn_off();
           id(leaving_home_active) = false;
+
+wifi:
+  use_address: 192.168.4.1
