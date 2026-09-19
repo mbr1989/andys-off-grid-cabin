@@ -3,6 +3,12 @@
 
 esphome:
   name: andys-off-grid-cabin
+  on_boot:
+    priority: 900.0 # Baut vor der LoRaWAN-Initialisierung auf
+    then:
+      - lambda: |-
+          // Erlaubt RadioLib/ESP-IDF die Nutzung des bereits installierten GPIO ISR Services
+          gpio_install_isr_service(0);
   friendly_name: "Andy's Off-Grid Cabin"
   area: Off-Grid Cabin
 
