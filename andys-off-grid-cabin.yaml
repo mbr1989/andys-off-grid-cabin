@@ -6,20 +6,15 @@ esphome:
   friendly_name: "Andy's Off-Grid Cabin"
   area: Off-Grid Cabin
 
-  # Header für den expliziten Aufruf der ESP-IDF GPIO-Funktionen
-  includes:
-    - "driver/gpio.h"
-
-  # Weist RadioLib / External Components an, den ESP32-ISR-Service mitzunutzen
   platformio_options:
     build_flags:
       - "-DRADIOLIB_ESP32_USE_ISR"
 
   on_boot:
-    priority: 1000.0 # Höchste Priorität: Läuft vor allen Display-, BMS- und LoRaWAN-Setups
+    priority: 1000.0
     then:
       - lambda: |-
-          // Fängt den ESP_ERR_INVALID_STATE ab, falls Display oder BMS den Service bereits gestartet haben
+          #include "driver/gpio.h"
           esp_err_t err = gpio_install_isr_service(0);
           if (err == ESP_ERR_INVALID_STATE) {
             ESP_LOGW("custom_isr", "GPIO ISR Service war bereits installiert und wird wiederverwendet.");
