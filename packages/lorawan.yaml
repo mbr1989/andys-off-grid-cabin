@@ -6,23 +6,25 @@ lorawan:
   region: EU868
   sub_band: 0
   uplink_interval: 15min
-  radio:
-   chip: sx1262
-   cs_pin: GPIO7
-   rst_pin: GPIO8
-   busy_pin: GPIO34
-   dio1_pin: GPIO33
-   sck_pin: GPIO5
-   miso_pin:
-     number: GPIO3
-     ignore_strapping_warning: true  # Schaltet die ESPHome-Warnung für diesen Pin stumm
-   mosi_pin: GPIO6
-
   # TTN-Credentials (HEX Format via secrets.yaml):
   dev_eui: !secret andys_off_grid_cabin__dev_eui
   join_eui: "0000000000000000"
   app_key: !secret andys_off_grid_cabin__app_key
   
+  radio:
+    chip: sx1262
+    cs_pin: GPIO7
+    rst_pin: GPIO8
+    busy_pin: GPIO34
+    dio1_pin: GPIO33
+    sck_pin: GPIO5
+    miso_pin:
+      number: GPIO3
+      ignore_strapping_warning: true
+    mosi_pin: GPIO6
+    tcxo_voltage: 1.6
+    dio2_as_rf_switch: true
+
   # Downlink-Handler für dynamische SoC-Grenzwerte (Port 1, 2 Bytes)
   on_downlink:
     then:
