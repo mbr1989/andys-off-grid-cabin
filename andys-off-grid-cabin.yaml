@@ -3,6 +3,12 @@
 
 esphome:
   name: andys-off-grid-cabin
+  on_boot:
+    priority: 1000.0 # Höchste Priorität: Läuft vor allen Display- und LoRaWAN-Setups
+    then:
+      - lambda: |-
+          // Initialisiert den ESP-IDF ISR Service einmalig sauber für alle Komponenten
+          gpio_install_isr_service(0);
   friendly_name: "Andy's Off-Grid Cabin"
   area: Off-Grid Cabin
 
