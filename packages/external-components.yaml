@@ -6,5 +6,5 @@ external_components:
 #  - source: github://moellere/lorawan-for-esphome@main
 #    components: [lorawan]
   - source: github://mbr1989/lorawan-for-esphome@fix-eu868-region
-    components: [ lorawan ]
+    components: [lorawan]
   - source: github://syssi/esphome-victron-vedirect@main
